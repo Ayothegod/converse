@@ -1,13 +1,18 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
+import { PrismaClient } from "@prisma/client";
 
-const prismaClientSingleton = () => {
-  return new PrismaClient();
-};
+// const prismaClientSingleton = () => {
+//   return new PrismaClient();
+// };
 
-global.prismaGlobal = global.prismaGlobal || prismaClientSingleton();
+// global.prismaGlobal = global.prismaGlobal || prismaClientSingleton();
+// const prisma = global.prismaGlobal;
 
-const prisma = global.prismaGlobal;
+// if (process.env.NODE_ENV !== "production") global.prismaGlobal = prisma;
+const prisma = new PrismaClient()
 
-if (process.env.NODE_ENV !== 'production') global.prismaGlobal = prisma;
+export const adapter = new PrismaAdapter(prisma.session, prisma.user)
 
-module.exports = prisma;
+export default prisma;
+
+

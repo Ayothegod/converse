@@ -1,26 +1,13 @@
-const prisma = require("./lib/db");
+import express from "express";
+import prisma from "./lib/db.js";
+import authRouter from "./routes/authRouter.js";
+const app = express()
 
+app.use(express.json())
+app.use("/", authRouter)
 
-async function main() {
-  // ... you will write your Prisma Client queries here
-  const user = await prisma.user.create({
-    data: {
-      name: 'Alice',
-      email: 'aladauys@prisma.io'
-    },
-  })
-  console.log(user);
-  
-}
+app.get("/", (req, res) => {
+  res.json({});
+});
 
-main()
-  .then(async () => {
-    await prisma.$disconnect()
-    console.log("done");
-    
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+app.listen(3001, () => console.log("server running"));
