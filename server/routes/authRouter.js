@@ -1,11 +1,10 @@
 // const hash = await bcrypt.hash(password, 10)
 import express from "express";
 const router = express.Router();
-import { Argon2id, Scrypt } from "oslo/password";
+import { Argon2id } from "oslo/password";
 import prisma from "../lib/db.js";
-import { lucia } from "../lib/auth.js";
-import bcrypt from "bcrypt";
 import { generateId } from "../lib/utils.js";
+import { isAuthenticated } from "../middleware/authMiddleware.js";
 
 const signUpFunction = async (req, res) => {
   try {
@@ -45,24 +44,20 @@ const signUpFunction = async (req, res) => {
       },
     });
 
-    const session = await lucia.createSession(userId, {});
-    // const sessionCookie = await lucia.createSessionCookie(session.id);
-    console.log(session);
+    req.session.userId = userId;
+    res.cookie("sessionId", req.sessionID);
 
-    // res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes)
-
-    res.status(200).json({});
-    // return redirect("/");
+    res.status(200).json({ status: "ok", userId: userId });
   } catch (error) {
     console.log(error);
-    res.status(401).json({});
+    res.status(401).json({msg: "error signup"});
   }
 };
 
 router.post("/signup", signUpFunction);
-router.post("/testRes", (req, res) => {
-  // res.cookie(name, val, options)
-  res.json({});
+router.post("/test", isAuthenticated, (req, res) => {
+    
+  res.json("test route");
 });
 
 export default router;

@@ -1,22 +1,30 @@
 import express from "express";
-import prisma from "./lib/db.js";
 import authRouter from "./routes/authRouter.js";
-const session = require("express-session");
-const app = express()
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import prisma from "./lib/db.js";
+import { PrismaSessionStore } from '@quixo3/prisma-session-store'
+const app = express();
+dotenv.config();
 
-app.use(express.json())
-app.use("/", authRouter)
+app.use(express.json());
+app.use(cookieParser());
 
 app.use(
   session({
-      secret: "your-secret-key",
-      resave: false,
-      saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    // store
   })
 );
+
+app.use("/", authRouter);
 
 app.get("/", (req, res) => {
   res.json({});
 });
+
 
 app.listen(3001, () => console.log("server running"));

@@ -11,6 +11,9 @@ dependencies:
   '@prisma/client':
     specifier: ^5.8.0
     version: 5.8.0(prisma@5.11.0)
+  '@quixo3/prisma-session-store':
+    specifier: ^3.1.13
+    version: 3.1.13(@prisma/client@5.8.0)(express-session@1.18.0)
   bcrypt:
     specifier: ^5.1.1
     version: 5.1.1
@@ -150,6 +153,11 @@ packages:
       '@tybys/wasm-util': 0.8.1
     dev: false
     optional: true
+
+  /@noble/hashes@1.4.0:
+    resolution: {integrity: sha512-V1JJ1WTRUqHHrOSh597hURcMqVKVGL/ea3kv0gSnEdsEZ0/+VyPghM1lMNGc00z7CIQorSvbKpuJkxvuHbvdbg==}
+    engines: {node: '>= 16'}
+    dev: false
 
   /@node-rs/argon2-android-arm-eabi@1.7.0:
     resolution: {integrity: sha512-udDqkr5P9E+wYX1SZwAVPdyfYvaF4ry9Tm+R9LkfSHbzWH0uhU6zjIwNRp7m+n4gx691rk+lqqDAIP8RLKwbhg==}
@@ -745,6 +753,12 @@ packages:
       '@node-rs/bcrypt-win32-x64-msvc': 1.9.2
     dev: false
 
+  /@paralleldrive/cuid2@2.2.2:
+    resolution: {integrity: sha512-ZOBkgDwEdoYVlSeRbYYXs0S9MejQofiVYoTbKzy/6GQa39/q5tQU2IX46+shYnUkpEl3wc+J6wRlar7r2EK2xA==}
+    dependencies:
+      '@noble/hashes': 1.4.0
+    dev: false
+
   /@prisma/client@5.8.0(prisma@5.11.0):
     resolution: {integrity: sha512-QxO6C4MaA/ysTIbC+EcAH1aX/YkpymhXtO6zPdk+FvA7+59tNibIYpd+7koPdViLg2iKES4ojsxWNUGNJaEcbA==}
     engines: {node: '>=16.13'}
@@ -784,6 +798,20 @@ packages:
     resolution: {integrity: sha512-rxtHpMLxNTHxqWuGOLzR2QOyQi79rK1u1XYAVLZxDGTLz/A+uoDnjz9veBFlicrpWjwuieM4N6jcnjj/DDoidw==}
     dependencies:
       '@prisma/debug': 5.11.0
+
+  /@quixo3/prisma-session-store@3.1.13(@prisma/client@5.8.0)(express-session@1.18.0):
+    resolution: {integrity: sha512-EAuOvYAaAsQ0OqxkdJG/Qs3cxlT4VV8SFHjtsA3G01uB1b6r7xftX3oeg7mcG0HN/DI1qOqwvy3YFoJ38ls0iA==}
+    engines: {node: '>=12.0'}
+    peerDependencies:
+      '@prisma/client': '>=2.16.1'
+      express-session: '>=1.17.1'
+    dependencies:
+      '@paralleldrive/cuid2': 2.2.2
+      '@prisma/client': 5.8.0(prisma@5.11.0)
+      express-session: 1.18.0
+      ts-dedent: 2.2.0
+      type-fest: 2.19.0
+    dev: false
 
   /@tsconfig/node10@1.0.11:
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -1914,6 +1942,11 @@ packages:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: false
 
+  /ts-dedent@2.2.0:
+    resolution: {integrity: sha512-q5W7tVM71e2xjHZTlgfTDoPF/SmqKG5hddq9SzR49CH2hayqRKJtQ4mtRlSxKaJlR/+9rEM+mnBHf7I2/BQcpQ==}
+    engines: {node: '>=6.10'}
+    dev: false
+
   /ts-node@10.9.2(@types/node@20.12.2)(typescript@5.4.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
@@ -1950,6 +1983,11 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /type-fest@2.19.0:
+    resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
+    engines: {node: '>=12.20'}
+    dev: false
 
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
