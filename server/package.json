@@ -5,17 +5,20 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon index.js",
-    "db:migrate":"prisma migrate dev"
+    "db:migrate": "prisma migrate dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@lucia-auth/adapter-prisma": "^4.0.1",
     "@prisma/client": "^5.8.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "lucia": "^3.1.1",
     "morgan": "^1.10.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "oslo": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.2",

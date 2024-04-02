@@ -1,13 +1,12 @@
-// import { PrismaClient } from '@prisma/client'
-const {PrismaClient} = require('@prisma/client')
-const prisma = new PrismaClient()
+const prisma = require("./lib/db");
+
 
 async function main() {
   // ... you will write your Prisma Client queries here
   const user = await prisma.user.create({
     data: {
       name: 'Alice',
-      email: 'alasicdfkne@prisma.io'
+      email: 'aladauys@prisma.io'
     },
   })
   console.log(user);
