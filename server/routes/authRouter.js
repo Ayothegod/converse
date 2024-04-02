@@ -28,21 +28,21 @@ const signUpFunction = async (req, res) => {
     const hashedPassword = await new Argon2id().hash(password);
     const userId = await generateId(15);
 
-    const userExist = await prisma.user.findUnique({
-      where: {
-        username: username,
-      },
-    });
+    // const userExist = await prisma.user.findUnique({
+    //   where: {
+    //     username: username,
+    //   },
+    // });
 
-    if (userExist) return res.status(400).json({ msg: "user already exist" });
+    // if (userExist) return res.status(400).json({ msg: "user already exist" });
 
-    const user = await prisma.user.create({
-      data: {
-        id: userId,
-        username: username,
-        hashedPassword: hashedPassword,
-      },
-    });
+    // const user = await prisma.user.create({
+    //   data: {
+    //     id: userId,
+    //     username: username,
+    //     hashedPassword: hashedPassword,
+    //   },
+    // });
 
     req.session.userId = userId;
     res.cookie("sessionId", req.sessionID);

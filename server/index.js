@@ -13,10 +13,20 @@ app.use(cookieParser());
 
 app.use(
   session({
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000 // ms
+     },
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    // store
+    store: new PrismaSessionStore(
+      prisma,
+      {
+        checkPeriod: 2 * 60 * 1000,  //ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }
+    )
   })
 );
 
