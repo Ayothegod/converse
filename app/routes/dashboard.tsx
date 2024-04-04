@@ -11,18 +11,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 // async function action({ request }: ActionFunctionArgs) {
-//   let formData = await request.formData();
-//   let intent = formData.get("intent");
+//   const formData = await request.formData();
+//   const _action = formData.get("_action");
 
-//   if (intent === "edit") {
+//   if (_action === "edit") {
 //     return { ok: true };
 //   }
 
-//   if (intent === "logout") {
+//   if (_action === "logout") {
 //     return await authenticator.logout(request, { redirectTo: "/login" });
 //   }
 
-//   throw json({ message: "Invalid intent" }, { status: 400 });
+//   throw new Error("Unknown action")
 // }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -44,24 +44,24 @@ export default function dashboard() {
       </div>
 
       {/* update stuff */}
-      {/* <Form method="post">
-        <button type="submit" name="intent" value="edit">
-          Edit
-        </button>
-      </Form> */}
-
       <Form method="post">
-        <button type="submit">
-          Logout
+        <button type="submit" name="_action" value="edit">
+          Edit
         </button>
       </Form>
 
-      {/* logout */}
       {/* <Form method="post">
-        <button type="submit" name="intent" value="logout">
+        <button type="submit">
           Logout
         </button>
       </Form> */}
+
+      {/* logout */}
+      <Form method="post">
+        <button type="submit" name="_action" value="logout">
+          Logout
+        </button>
+      </Form>
     </>
   );
 }
