@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@lucia-auth/adapter-prisma": "^4.0.1",
+    "@prisma/client": "^5.8.0",
+    "@quixo3/prisma-session-store": "^3.1.13",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "lucia": "^3.1.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.0",
+    "oslo": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.2",
+    "dotenv": "^16.4.5",
+    "prisma": "^5.11.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  }
+}
