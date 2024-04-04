@@ -5,8 +5,8 @@ import { useLoaderData } from "@remix-run/react"
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Babble chat" },
+    { name: "description", content: "Elevate your conversations, embrace the future of messaging." },
   ];
 };
 
@@ -19,6 +19,7 @@ export const loader = async () => {
   // })
   return json(await prisma.user.findMany());
 };
+// pnpm add remix-auth-form
 
 export default function Index() {
   const data = useLoaderData<typeof loader>();
