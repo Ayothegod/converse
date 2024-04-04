@@ -17,7 +17,7 @@ export const loader = async () => {
   //     name:"Ayomide Adebisi"
   //   }
   // })
-  return json(await prisma.user.deleteMany());
+  return json(await prisma.user.findMany());
 };
 // pnpm add remix-auth-form
 
