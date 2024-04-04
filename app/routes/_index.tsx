@@ -7,8 +7,6 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-// "postgresql://postgres:postgrespass@localhost:5432/babblechat?schema=public"
-
 export default function Index() {
   return (
     <div className="">
@@ -16,4 +14,3 @@ export default function Index() {
     </div>
   );
 }
-// prisma init
