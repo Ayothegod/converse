@@ -1,7 +1,7 @@
 import type { MetaFunction,  } from "@remix-run/node";
-import prisma from "~/lib/db";
-import { json } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+// import prisma from "~/lib/db";
+// import { json } from "@remix-run/node"
+// import { useLoaderData } from "@remix-run/react"
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,20 +10,14 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader = async () => {
-  // await prisma.user.create({
-  //   data: {
-  //     email: "legacyEmpilre*@gmail.com",
-  //     name:"Ayomide Adebisi"
-  //   }
-  // })
-  return json(await prisma.user.findMany());
-};
+// export const loader = async () => {
+//   return json(await prisma.user.findMany());
+// };
 // pnpm add remix-auth-form
 
 export default function Index() {
-  const data = useLoaderData<typeof loader>();
-  console.log(data);
+  // const data = useLoaderData<typeof loader>();
+  // console.log(data);
   
   return (
     <div className="">

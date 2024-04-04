@@ -1,16 +1,12 @@
-// app/routes/login.tsx
+import { authenticator } from "~/services/auth.server";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
-import { authenticator } from "~/services/auth.server";
 
 // login or signup
-export async function action({ request }: ActionFunctionArgs) {
-    let formData = await request.formData();
+export async function action({  request }: ActionFunctionArgs) {
   return await authenticator.authenticate("user-pass", request, {
-
     successRedirect: "/dashboard",
     failureRedirect: "/login",
-    context: { formData }, 
   });
 }
 
@@ -22,13 +18,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Screen() {
+
   return (
-    <Form method="post">
+    <Form method="post" className="flex flex-col items-center gap-6 mt-8">
       <input
         type="email"
         name="email"
-        className="border border-blacK"
         required
+        className="border border-blacK"
       />
       <input
         className="border border-blacK"
@@ -41,4 +38,3 @@ export default function Screen() {
     </Form>
   );
 }
-

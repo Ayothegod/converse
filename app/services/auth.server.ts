@@ -1,54 +1,80 @@
-import { Authenticator } from "remix-auth";
+import { Authenticator, AuthorizationError } from "remix-auth";
 import { sessionStorage } from "~/services/session.server";
-
 import { FormStrategy } from "remix-auth-form";
 
 import prisma from "~/lib/db";
 
-export let authenticator = new Authenticator(sessionStorage);
+export let authenticator = new Authenticator(sessionStorage, {
+  sessionKey: "sessionKey", // keep in sync
+  sessionErrorKey: "sessionErrorKey", // keep in sync
+  throwOnError: true
+});
+
 
 // create a user type for the seesion
 // export let authenticator = new Authenticator<User>(sessionStorage);
 try {
-  authenticator.use(
-    new FormStrategy(async ({ form, context }) => {
-      // and also use `context` to access more things from the server
-      let email: FormDataEntryValue | null = form.get("email");
-      //   let username = form.get("username");
-      let password = form.get("password");
+authenticator.use(
+  new FormStrategy(async ({ form, context }) => {
+    let email = form.get("email") as string;
+    let password = form.get("password") as string;
 
-      // You can validate the inputs however you want
+    // do some validation, errors are in the sessionErrorKey
+    // You can validate the inputs however you want
+    if (!email || email?.length === 0)
+      throw new AuthorizationError("Bad Credentials: Email is required");
+    if (typeof email !== "string")
+      throw new AuthorizationError("Bad Credentials: Email must be a string");
 
-      if (typeof email === "string" && typeof password === "string") {
-        //hash password
-        const hashedPassword = password;
+    if (!password || password?.length === 0)
+      throw new AuthorizationError("Bad Credentials: Password is required");
+    if (typeof password !== "string")
+      throw new AuthorizationError(
+        "Bad Credentials: Password must be a string"
+      );
 
-        // And finally, you can find, or create, the user
-        let user = await prisma.user.findUnique({
-          where: {
+    // login the user, this could be whatever process you want
+    if (email && password) {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
+
+      if (!user) {
+        // hash password
+        const hashedPassword = password
+
+        let user = await prisma.user.create({
+          data: {
             email: email,
+            hashedPassword: hashedPassword,
           },
         });
 
-        if (!user) {
-          let user = await prisma.user.create({
-            data: {
-              email: email,
-              hashedPassword: hashedPassword,
-            },
-          });
-          return user;
-        }
-
-        return user;
-      } else {
-        // Handle the case when email is null or not a string
-        console.log("error finding or creating user");
-        return;
+        return { userId: user?.id, user: user };
       }
-    }),
-    "user-pass"
-  );
-} catch (error) {
-  console.log(error);
+
+      // const passwordMatch = await bcrypt.compare(
+      //   password,
+      //   user?.hashedPassword as string
+      // );
+
+      // if (!passwordMatch)
+      //   throw new AuthorizationError("invalid email or password", {
+      //     name: "invalidCredentials",
+      //     message: "invalid email or password",
+      //     cause: "invalidCredentials",
+      //   });
+
+      return { userId: user?.id, user: user };
+    } else {
+      // if problem with user throw error AuthorizationError
+      throw new AuthorizationError("Bad Credentials");
+    }
+  }),
+  "user-pass"
+);
+  } catch (error) {
+  throw new AuthorizationError("check your connection and try again!");
 }
