@@ -4,14 +4,25 @@ import { FormStrategy } from "remix-auth-form";
 import bcrypt from "bcryptjs";
 import prisma from "~/lib/db";
 
+type User = {
+  session: string;
+  userId: string;
+  user: {
+    id: string;
+    email: string;
+    username: string | null;
+    hashedPassword: string;
+  };
+};
+// create a user type for the seesion
+// export let authenticator = new Authenticator<User>(sessionStorage);
+
 export let authenticator = new Authenticator(sessionStorage, {
   sessionKey: "sessionKey", // keep in sync
   sessionErrorKey: "sessionErrorKey", // keep in sync
   throwOnError: true,
 });
 
-// create a user type for the seesion
-// export let authenticator = new Authenticator<User>(sessionStorage);
 try {
   authenticator.use(
     new FormStrategy(async ({ form, context }) => {
@@ -56,7 +67,7 @@ try {
           });
 
           console.log("end create user");
-          return { userId: user?.id, user: user };
+          return { session: "new_user", userId: user?.id, user: user };
         }
 
         console.log("theres user");
@@ -75,7 +86,7 @@ try {
         }
 
         console.log("this user");
-        return { userId: user?.id, user: user };
+        return { session: "returning_user", userId: user?.id, user: user };
       } else {
         // if problem with user throw error AuthorizationError
         throw new AuthorizationError("Bad Credentials");

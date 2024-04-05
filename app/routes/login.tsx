@@ -5,7 +5,7 @@ import { Form } from "@remix-run/react";
 // login or signup
 export async function action({  request }: ActionFunctionArgs) {
   return await authenticator.authenticate("user-pass", request, {
-    successRedirect: "/dashboard",
+    successRedirect: "/onboarding",
     failureRedirect: "/login",
   });
 }
