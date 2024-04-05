@@ -15,5 +15,5 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Onboarding() {
-  return <div>Hello Users Onboarding</div>;
+  return <div>Hello Users Onboarding, is this playing</div>;
 }

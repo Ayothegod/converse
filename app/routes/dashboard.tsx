@@ -1,7 +1,17 @@
 import { authenticator } from "~/services/auth.server";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Form, json } from "@remix-run/react";
 import { useLoaderData, useActionData } from "@remix-run/react";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Babble chat - dashboard" },
+    {
+      name: "description",
+      content: "Elevate your conversations, embrace the future of messaging.",
+    },
+  ];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   let user;
@@ -29,19 +39,19 @@ export async function action({ request }: ActionFunctionArgs) {
   await authenticator.logout(request, { redirectTo: "/login" });
 };
 
-export default function dashboard() {
-  const data = useLoaderData<typeof loader>();
-  console.log(data);
+export default function Dashboard() {
+  // const data = useLoaderData<typeof loader>();
+  // console.log(data);
 
   return (
     <>
-      <div className="text-5xl text-black font-bol underline">
-        dashboard route
+      <div className="text-5xl text-white font-bol underline">
+        dashboard route available dffjddfnmsnm omg
       </div>
 
-      <div>
+      {/* <div>
         {JSON.stringify(data, null, 2)}
-      </div>
+      </div> */}
 
       {/* update stuff */}
       <Form method="post">

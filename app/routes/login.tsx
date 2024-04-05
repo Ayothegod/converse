@@ -1,6 +1,16 @@
 import { authenticator } from "~/services/auth.server";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Form } from "@remix-run/react";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Babble chat - login" },
+    {
+      name: "description",
+      content: "Elevate your conversations, embrace the future of messaging.",
+    },
+  ];
+};
 
 // login or signup
 export async function action({  request }: ActionFunctionArgs) {

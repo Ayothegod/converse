@@ -1,32 +1,29 @@
-import type { MetaFunction,  } from "@remix-run/node";
-// import prisma from "~/lib/db";
-// import { json } from "@remix-run/node"
-// import { useLoaderData } from "@remix-run/react"
-import { Button } from "../components/ui/button"
+import type { MetaFunction } from "@remix-run/node";
+import { Button } from "../components/ui/button";
 import { ModeToggle } from "~/components/build/ModeToggle";
 export const meta: MetaFunction = () => {
   return [
     { title: "Babble chat" },
-    { name: "description", content: "Elevate your conversations, embrace the future of messaging." },
+    {
+      property: "og:title",
+      content: "Very cool app",
+    },
+    {
+      name: "description",
+      content: "Elevate your conversations, embrace the future of messaging.",
+    },
   ];
 };
 
-// export const loader = async () => {
-//   return json(await prisma.user.findMany());
-// };
-// pnpm add remix-auth-form
-
 export default function Index() {
-  // const data = useLoaderData<typeof loader>();
-  // console.log(data);
-  
   return (
     <div className="">
-      <h1 className="text-4xl font-extrabold text-purple-600">Welcome to Remix</h1>
-      <Button>Button</Button>
-      <ModeToggle/>
+      <h1 className="text-4xl font-extrabold text-purple-600">
+        Welcome to Remix
+      </h1>
+      <Button>Button, lets code on the beat</Button>
+      <p>This is working now</p>
+      <ModeToggle />
     </div>
   );
 }
-
-// @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap')
