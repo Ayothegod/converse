@@ -3,7 +3,7 @@ import type { MetaFunction,  } from "@remix-run/node";
 // import { json } from "@remix-run/node"
 // import { useLoaderData } from "@remix-run/react"
 import { Button } from "../components/ui/button"
-
+import { ModeToggle } from "~/components/build/ModeToggle";
 export const meta: MetaFunction = () => {
   return [
     { title: "Babble chat" },
@@ -24,6 +24,9 @@ export default function Index() {
     <div className="">
       <h1 className="text-4xl font-extrabold text-purple-600">Welcome to Remix</h1>
       <Button>Button</Button>
+      <ModeToggle/>
     </div>
   );
 }
+
+// @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap')
