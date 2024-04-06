@@ -40,13 +40,13 @@ export async function action({ request }: ActionFunctionArgs) {
 };
 
 export default function Dashboard() {
-  // const data = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
   // console.log(data);
 
   return (
     <>
       <div className="text-5xl text-white font-bol underline">
-        dashboard route available dffjddfnmsnm omg
+        dashboard route available dffjddfnmsnm omg heelldklsd
       </div>
 
       {/* <div>
