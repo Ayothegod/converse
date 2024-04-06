@@ -27,6 +27,20 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      colors:{
+        primary:"#9747ff",
+        "light-foreground":"#f5f4f6",
+        "light-bg":"#ffffff",
+        "dark-foreground":"#1f2128",
+        "dark-bg":"#242731",
+        "neutral-gray":"#888888",
+      },
+      fontFamily:{
+        "poppins":["Poppins", "sans-serif"],
+        "orbitron": ['Orbitron', "sans-serif"],
+        "josefin": ['Josefin Sans', "sans-serif"],
+        "courgette": [ 'Courgette', "cursive"],
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

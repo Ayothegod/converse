@@ -18,12 +18,16 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div className="">
-      <h1 className="text-4xl font-extrabold text-purple-600">
+      <h1 className="text-4xl font-mono font-extrabold text-purple-600">
         Welcome to Remix
       </h1>
-      <Button>Button, lets code on the beat</Button>
-      <p>This is working now</p>
       <ModeToggle />
+
+      <p className=" font-courgette">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores
+        quaerat exercitationem cumque modi. Nemo repudiandae officia veniam
+        placeat sit fugiat.
+      </p>
     </div>
   );
 }
