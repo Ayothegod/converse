@@ -1,6 +1,7 @@
-# Welcome to Remix + Vite!
+# Welcome to Babble chat
+### Todos
+- add auth carousel assets
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
 
 ## Development
 

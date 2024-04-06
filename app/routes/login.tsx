@@ -10,6 +10,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Loader2 } from "lucide-react";
 import { AuthCarousel } from "~/components/build/AuthCarousel";
+import { ModeToggle } from "~/components/build/ModeToggle";
 
 export const meta: MetaFunction = () => {
   return [
@@ -40,14 +41,16 @@ export default function Screen() {
   const { state } = useNavigation();
   return (
     <main className=" flex items-center justify-center h-screen p-4 font-poppins">
-      <section className="mx-auto w-full md:h-[80vh] md:w-[80vw] lg:w-[70%] flex bg-light-bg rounded-md overflow-hidden">
+      <section className="mx-auto w-full md:h-[80vh] md:w-[80vw] lg:w-[70%] flex bg-light-bg dark:bg-dark-bg rounded-md overflow-hidden">
         <div className="flex-[50%] p-10 space-y-4">
           <h1 className="text-primary text-2xl font-extrabold font-mono">
             BabbleChat
           </h1>
+      <ModeToggle />
+
 
           <div>
-            <h2 className="text-dark-foreground text-lg md:text-x font-bold">
+            <h2 className="text-dark-foreground dark:text-light-foreground text-lg md:text-x font-bold">
               Log in to your Account
             </h2>
             <p className="text-sm">Welcome back!</p>
@@ -64,7 +67,7 @@ export default function Screen() {
               name="email"
               required
               placeholder="Email Address"
-              className=" text-dark-bg"
+              className=" text-dark-bg  dark:text-light-bg"
             />
             <Input
               type="password"
@@ -72,7 +75,7 @@ export default function Screen() {
               required
               placeholder="password"
               autoComplete="current-password"
-              className=" text-dark-bg"
+              className=" text-dark-bg dark:text-light-bg"
             />
             <Label className="text-xs text-right text-primary">
               Forgot Password?

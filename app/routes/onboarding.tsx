@@ -1,8 +1,22 @@
 import { authenticator } from "~/services/auth.server";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Form, json, redirect } from "@remix-run/react";
 import { useLoaderData, useActionData } from "@remix-run/react";
 import { UserSessionType } from "../lib/types";
+import { ModeToggle } from "~/components/build/ModeToggle";
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Babble chat - Onboarding" },
+    {
+      property: "og:title",
+      content: "Very cool app",
+    },
+    {
+      name: "description",
+      content: "Elevate your conversations, embrace the future of messaging.",
+    },
+  ];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
@@ -15,5 +29,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Onboarding() {
-  return <div>Hello Users Onboarding, is this playing</div>;
+  return (
+  <div>
+    Hello users
+      <ModeToggle />
+
+  </div>
+  )
 }
