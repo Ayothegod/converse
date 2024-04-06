@@ -9,6 +9,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Loader2 } from "lucide-react";
+import { AuthCarousel } from "~/components/build/AuthCarousel";
 
 export const meta: MetaFunction = () => {
   return [
@@ -77,12 +78,7 @@ export default function Screen() {
               Forgot Password?
             </Label>
             <Button className="w-full bg-primary gap-2">
-              {state === "idle" ? null :
-              <Loader2
-                className={`animate-spin`}
-              />
-
-              }
+              {state === "idle" ? null : <Loader2 className={`animate-spin`} />}
               {state === "idle"
                 ? "Log in"
                 : state === "loading"
@@ -97,7 +93,9 @@ export default function Screen() {
           </p>
         </div>
 
-        <div className="hidden md:block flex-[50%] bg-primary"></div>
+        <div className="hidden flex-[50%] bg-primary md:flex items-center justify-center">
+          <AuthCarousel />
+        </div>
       </section>
     </main>
   );
