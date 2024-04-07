@@ -31,6 +31,7 @@ const config = {
         primary:"#9747ff",
         "light-foreground":"#f5f4f6",
         "light-bg":"#ffffff",
+        "light-primary":"#fffffc",
         "dark-foreground":"#1f2128",
         "dark-bg":"#242731",
         "neutral-gray":"#888888",
@@ -40,6 +41,10 @@ const config = {
         "orbitron": ['Orbitron', "sans-serif"],
         "josefin": ['Josefin Sans', "sans-serif"],
         "courgette": [ 'Courgette', "cursive"],
+
+        "light-gray": [ '#f8f9fa', "#e9ecef", "#dee2e6", "#ced4da", "#adb5bd", "#6c757d","#495057", "#343a40", "#212529"],
+
+        "dark-variation": [ '#09090c', "#121317", "#1b1c23", "#1f2128", "#2c2f3a", "#353945","#3e4251", "#474c5c", "#505568"],
       }
     },
   },

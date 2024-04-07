@@ -82,7 +82,7 @@ export default function Onboarding() {
                   className=" text-dark-bg  dark:text-light-bg w-full"
                 />
               </div>
-              <Input type="hidden" name="title" value={data.userId} />
+              {/* <Input type="hidden" name="title" value={data.userId} /> */}
 
               <Button variant="primary" name="intent" value="updateUsername">
                 Start
