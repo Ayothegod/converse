@@ -11,6 +11,7 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { Loader2 } from "lucide-react";
 import { AuthCarousel } from "~/components/build/AuthCarousel";
 import { ModeToggle } from "~/components/build/ModeToggle";
+import { getSession, commitSession } from "~/services/session.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -24,6 +25,10 @@ export const meta: MetaFunction = () => {
 
 // login or signup
 export async function action({ request }: ActionFunctionArgs) {
+  // const session = await getSession(
+  //   request.headers.get("Cookie")
+  // );
+
   return await authenticator.authenticate("user-pass", request, {
     successRedirect: "/onboarding",
     failureRedirect: "/login",

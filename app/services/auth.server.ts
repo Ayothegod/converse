@@ -1,5 +1,9 @@
 import { Authenticator, AuthorizationError } from "remix-auth";
-import { sessionStorage } from "~/services/session.server";
+import {
+  commitSession,
+  getSession,
+  sessionStorage,
+} from "~/services/session.server";
 import { FormStrategy } from "remix-auth-form";
 import bcrypt from "bcryptjs";
 import prisma from "~/lib/db";
@@ -45,6 +49,7 @@ try {
           "Bad Credentials: Password must be a string"
         );
 
+      const session = await getSession();
       // login the user, this could be whatever process you want
       if (email && password) {
         const user = await prisma.user.findUnique({
@@ -67,6 +72,8 @@ try {
           });
 
           console.log("end create user");
+          session.set("userId", user?.id);
+
           return { session: "new_user", userId: user?.id, user: user };
         }
 
@@ -86,6 +93,7 @@ try {
         }
 
         console.log("this user");
+        session.set("userId", user?.id);
         return { session: "returning_user", userId: user?.id, user: user };
       } else {
         // if problem with user throw error AuthorizationError
