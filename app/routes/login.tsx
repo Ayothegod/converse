@@ -1,17 +1,16 @@
-import { authenticator } from "~/services/auth.server";
+import { Label } from "@radix-ui/react-dropdown-menu";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
 import { Form, useNavigation } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "@radix-ui/react-dropdown-menu";
 import { Loader2 } from "lucide-react";
 import { AuthCarousel } from "~/components/build/AuthCarousel";
 import { ModeToggle } from "~/components/build/ModeToggle";
-import { getSession, commitSession } from "~/services/session.server";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { authenticator } from "~/services/auth.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,10 +24,6 @@ export const meta: MetaFunction = () => {
 
 // login or signup
 export async function action({ request }: ActionFunctionArgs) {
-  // const session = await getSession(
-  //   request.headers.get("Cookie")
-  // );
-
   return await authenticator.authenticate("user-pass", request, {
     successRedirect: "/onboarding",
     failureRedirect: "/login",
@@ -52,7 +47,6 @@ export default function Screen() {
           <h1 className="text-primary text-2xl font-extrabold font-mono">
             BabbleChat
           </h1>
-
 
           <div>
             <h2 className="text-dark-foreground dark:text-light-foreground text-lg md:text-x font-bold">

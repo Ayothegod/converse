@@ -1,27 +1,16 @@
-import { Authenticator, AuthorizationError } from "remix-auth";
-import {
-  commitSession,
-  getSession,
-  sessionStorage,
-} from "~/services/session.server";
-import { FormStrategy } from "remix-auth-form";
 import bcrypt from "bcryptjs";
+import { Authenticator, AuthorizationError } from "remix-auth";
+import { FormStrategy } from "remix-auth-form";
 import prisma from "~/lib/db";
+import { sessionStorage } from "~/services/session.server";
 
 type User = {
-  session: string;
   userId: string;
-  user: {
-    id: string;
-    email: string;
-    username: string | null;
-    hashedPassword: string;
-  };
+  userEmail: string;
+  typeOfUser: string;
 };
-// create a user type for the seesion
-// export let authenticator = new Authenticator<User>(sessionStorage);
 
-export let authenticator = new Authenticator(sessionStorage, {
+export let authenticator = new Authenticator<User | null>(sessionStorage, {
   sessionKey: "sessionKey", // keep in sync
   sessionErrorKey: "sessionErrorKey", // keep in sync
   throwOnError: true,
@@ -33,10 +22,8 @@ try {
       let email = form.get("email") as string;
       let password = form.get("password") as string;
 
-      // do some validation, errors are in the sessionErrorKey
-      // TODO: make sure to do real validation and return the results to the broswer
+      // TODO: make sure to do real validation and return the results to the broswer, errors are in the sessionErrorKey
 
-      // You can validate the inputs however you want
       if (!email || email?.length === 0)
         throw new AuthorizationError("Bad Credentials: Email is required");
       if (typeof email !== "string")
@@ -49,7 +36,6 @@ try {
           "Bad Credentials: Password must be a string"
         );
 
-      const session = await getSession();
       // login the user, this could be whatever process you want
       if (email && password) {
         const user = await prisma.user.findUnique({
@@ -72,9 +58,12 @@ try {
           });
 
           console.log("end create user");
-          session.set("userId", user?.id);
 
-          return { session: "new_user", userId: user?.id, user: user };
+          const userId: string = await user.id;
+          const typeOfUser: string = "new_user";
+          const userEmail: string | undefined = await user?.email;
+
+          return { userId, userEmail, typeOfUser };
         }
 
         console.log("theres user");
@@ -92,9 +81,11 @@ try {
           return null;
         }
 
-        console.log("this user");
-        session.set("userId", user?.id);
-        return { session: "returning_user", userId: user?.id, user: user };
+        const userId: string = await user?.id;
+        const userEmail: string = await user?.email;
+        const typeOfUser: string = "returning_user";
+
+        return { userId, userEmail, typeOfUser };
       } else {
         // if problem with user throw error AuthorizationError
         throw new AuthorizationError("Bad Credentials");

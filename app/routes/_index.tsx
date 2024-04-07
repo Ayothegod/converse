@@ -1,6 +1,8 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Button } from "../components/ui/button";
 import { ModeToggle } from "~/components/build/ModeToggle";
+// import SessionCount from "~/components/build/SessionCount";
+
 export const meta: MetaFunction = () => {
   return [
     { title: "Babble chat" },
@@ -22,6 +24,8 @@ export default function Index() {
         Welcome to Remix
       </h1>
       <ModeToggle />
+
+      {/* <SessionCount/> */}
 
       <p className=" font-courgette">
         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores

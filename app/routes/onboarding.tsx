@@ -30,19 +30,9 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
-  const session = await getSession()
-  console.log(session.data);
-
-  if (session.has("userId")) {
-    // Redirect to the home page if they are already signed in.
-    // return redirect("/");
-    console.log("userId");
-    
-  }
-  
 
   // TODO: test for when a new user is created
-  if (user && (user as UserSessionType).session === "new_user") {
+  if (user?.typeOfUser === "new_user") {
     return user
   } else {
     return redirect("/dashboard");
@@ -95,7 +85,7 @@ export default function Onboarding() {
                   className=" text-dark-bg  dark:text-light-bg w-full"
                 />
               </div>
-              {/* <Input type="hidden" name="title" value={data.userId as any} /> */}
+              {/* <Input type="hidden" name="title" value={data.userId} /> */}
 
               <Button variant="primary" name="intent" value="updateUsername">
                 Start
