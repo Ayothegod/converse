@@ -4,6 +4,8 @@ import { Form, json, redirect } from "@remix-run/react";
 import { useLoaderData, useActionData } from "@remix-run/react";
 import { UserSessionType } from "../lib/types";
 import { ModeToggle } from "~/components/build/ModeToggle";
+import { Label } from "~/components/ui/label";
+import { Button } from "~/components/ui/button";
 export const meta: MetaFunction = () => {
   return [
     { title: "Babble chat - Onboarding" },
@@ -30,10 +32,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Onboarding() {
   return (
-  <div>
-    Hello users
+    <main className=" flex items-center justify-center h-screen p-4">
+    <section className="mx-auto w-full md:w-[80vw] lg:w-[70%] flex flex-col bg-light-bg dark:bg-dark-bg rounded-md overflow-hidden p-2">
+      <h1 className="text-primary text-2xl font-extrabold font-mono">Let's get you onboard</h1>
+      <Label className="text-xs">Follow the setup below to get you started</Label>
+
+      <div>
+        <Button variant="primary">Hello</Button>
+      </div>
       <ModeToggle />
 
-  </div>
+  </section>
+  </main>
   )
 }

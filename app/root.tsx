@@ -50,7 +50,7 @@ export function App() {
         <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
         <Links />
       </head>
-      <body>
+      <body className="font-poppins">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
