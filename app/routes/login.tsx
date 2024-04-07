@@ -41,12 +41,12 @@ export default function Screen() {
   const { state } = useNavigation();
   return (
     <main className=" flex items-center justify-center h-screen p-4">
+      <ModeToggle />
       <section className="mx-auto w-full md:h-[80vh] md:w-[80vw] lg:w-[70%] flex bg-light-bg dark:bg-dark-bg rounded-md overflow-hidden">
         <div className="flex-[50%] p-10 space-y-4">
           <h1 className="text-primary text-2xl font-extrabold font-mono">
             BabbleChat
           </h1>
-      <ModeToggle />
 
 
           <div>
