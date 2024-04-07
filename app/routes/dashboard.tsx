@@ -41,7 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
-  console.log(data);
+  // console.log(data);
 
   return (
     <>

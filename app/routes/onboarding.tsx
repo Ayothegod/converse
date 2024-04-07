@@ -1,18 +1,17 @@
-import { authenticator } from "~/services/auth.server";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { Form, json, redirect, useSearchParams } from "@remix-run/react";
-import { useLoaderData, useActionData } from "@remix-run/react";
-import { UserSessionType } from "../lib/types";
+import { Form, redirect, useLoaderData } from "@remix-run/react";
+import { User } from "lucide-react";
 import { ModeToggle } from "~/components/build/ModeToggle";
-import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
-import { Contact, PersonStanding, User } from "lucide-react";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { authenticator } from "~/services/auth.server";
 import { getSession } from "~/services/session.server";
+
 
 export const meta: MetaFunction = () => {
   return [
@@ -30,10 +29,12 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
+  const session = await getSession();
+  console.log(session.data?.userId);
 
   // TODO: test for when a new user is created
-  if (user?.typeOfUser === "new_user") {
-    return user
+  if (user && user?.typeOfUser === "new_user") {
+    return user;
   } else {
     return redirect("/dashboard");
   }
@@ -53,16 +54,16 @@ export async function action({ request, context, params }: ActionFunctionArgs) {
   if (intent === "updateUsername") {
     console.log("updateUsername");
     console.log(request, context, params);
-    
+
     return null;
   }
   throw new Error("Unknown action");
 }
 
 export default function Onboarding() {
-  const data = useLoaderData<typeof loader>()
-  console.log(data);
-  
+  const data = useLoaderData<typeof loader>();
+  // console.log(data);
+
   return (
     <Form method="post">
       <main className=" flex items-center justify-center h-screen p-4">
@@ -85,7 +86,6 @@ export default function Onboarding() {
                   className=" text-dark-bg  dark:text-light-bg w-full"
                 />
               </div>
-              {/* <Input type="hidden" name="title" value={data.userId} /> */}
 
               <Button variant="primary" name="intent" value="updateUsername">
                 Start

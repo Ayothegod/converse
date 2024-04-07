@@ -4,12 +4,13 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { Form, useNavigation } from "@remix-run/react";
+import { Form, redirect, useNavigation } from "@remix-run/react";
 import { Loader2 } from "lucide-react";
 import { AuthCarousel } from "~/components/build/AuthCarousel";
 import { ModeToggle } from "~/components/build/ModeToggle";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { setUserSessionData } from "~/lib/session";
 import { authenticator } from "~/services/auth.server";
 
 export const meta: MetaFunction = () => {
@@ -24,10 +25,14 @@ export const meta: MetaFunction = () => {
 
 // login or signup
 export async function action({ request }: ActionFunctionArgs) {
-  return await authenticator.authenticate("user-pass", request, {
-    successRedirect: "/onboarding",
+  let user = await authenticator.authenticate("user-pass", request, {
     failureRedirect: "/login",
   });
+  const headers = await setUserSessionData(request, user);
+
+  if (user?.typeOfUser === "returning_user")
+    return redirect("/dashboard", { headers });
+  return redirect("/onboarding", { headers });
 }
 
 // check if user session already exists

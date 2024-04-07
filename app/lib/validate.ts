@@ -9,3 +9,11 @@ export const schema  = z.object({
       .min(6, 'Password is too short')
       .max(100, 'Password is too long'),
   });
+
+// export const isOnboarded = async(user: any) => {
+//   const isExistingUser = await user?.typeOfUser === "returning_user"
+//   if(isExistingUser){
+
+//   }
+
+// }

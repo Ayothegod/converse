@@ -21,7 +21,6 @@ try {
     new FormStrategy(async ({ form, context }) => {
       let email = form.get("email") as string;
       let password = form.get("password") as string;
-
       // TODO: make sure to do real validation and return the results to the broswer, errors are in the sessionErrorKey
 
       if (!email || email?.length === 0)
