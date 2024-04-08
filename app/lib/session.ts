@@ -23,10 +23,7 @@ export const getUserSessionData = async (request: any) => {
   const userCookie = await commitSession(session);
   const headers = new Headers({ "Set-Cookie": userCookie });
 
-  console.log({ loader: session.get("sessionKey") });
-
-  return headers;
-
-//   const headers = await getUserSessionData(request)
-//   return json(null, { headers });
+  return { sessionData, headers };
+  //   const headers = await getUserSessionData(request)
+  //   return json(null, { headers });
 };

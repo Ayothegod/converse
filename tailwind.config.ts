@@ -34,6 +34,7 @@ const config = {
         "light-primary":"#fffffc",
         "dark-foreground":"#1f2128",
         "dark-bg":"#242731",
+        "dark-primary":"#2c2f3a",
         "neutral-gray":"#888888",
       },
       fontFamily:{
@@ -44,7 +45,11 @@ const config = {
 
         "light-gray": [ '#f8f9fa', "#e9ecef", "#dee2e6", "#ced4da", "#adb5bd", "#6c757d","#495057", "#343a40", "#212529"],
 
-        "dark-variation": [ '#09090c', "#121317", "#1b1c23", "#1f2128", "#2c2f3a", "#353945","#3e4251", "#474c5c", "#505568"],
+        "dark-variation": [ '#09090c',
+        // perfect
+        "#121317", "#1b1c23", "#1f2128", "#2c2f3a",
+        // too light
+         "#353945","#3e4251", "#474c5c", "#505568"],
       }
     },
   },
