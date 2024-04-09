@@ -8,6 +8,7 @@ import {
   json,
   redirect,
   useLoaderData,
+  useRouteError,
   useSearchParams,
 } from "@remix-run/react";
 import { User } from "lucide-react";
@@ -16,6 +17,8 @@ import { ModeToggle } from "~/components/build/ModeToggle";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { errorResponse, updateUsername } from "~/lib/actions";
+import prisma from "~/lib/db";
 import { getUserSessionData } from "~/lib/session";
 import { authenticator } from "~/services/auth.server";
 
@@ -36,10 +39,11 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
   const { sessionData, headers } = await getUserSessionData(request);
-  console.log(sessionData);
+  // console.log({sessionData:sessionData});
+  // console.log({user: user});
 
   if (user && user?.typeOfUser === "new_user") {
-    if (user?.userUsername !== null) {
+    if (sessionData?.username !== null) {
       return redirect("/dashboard", { headers });
     }
     return json(user, { headers });
@@ -50,9 +54,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   const { sessionData, headers } = await getUserSessionData(request);
-
   const formData = await request.formData();
+
   const intent = await formData.get("intent");
+  const username = formData.get("username");
 
   // if (intent === "start") {
   //   console.log("start");
@@ -62,15 +67,25 @@ export async function action({ request }: ActionFunctionArgs) {
   //   console.log("skip");
   //   return null;
   // }
-  if (intent === "updateUsername") {
-    console.log("updateUsername");
-    return null;
+  if (intent === "updateUsername" && username !== null) {
+    const { headers, sessionData: data } = await updateUsername(
+      request,
+      sessionData,
+      username
+    )
+    console.log(data);
+    
+
+    return json(data, { headers });
+    // errorResponse("Username not updated! please try again later...", 404);
   }
-  throw new Error("Unknown action");
+  errorResponse("Unknown Action", 500);
 }
 
 export default function Onboarding() {
   const data = useLoaderData<typeof loader>();
+  // console.log(data);
+
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "skip";
 
@@ -84,7 +99,7 @@ export default function Onboarding() {
 
         <div className="mt-6 space-y-2">
           {/* username */}
-          {/* <Form method="post">
+          <Form method="post">
             <div className="contain p-2 flex items-end justify-between gap-2">
               <div className="flex flex-col item-start gap-1 w-full">
                 <Label className="text-xs font-medium">choose username</Label>
@@ -106,7 +121,7 @@ export default function Onboarding() {
                 continue
               </Button>
             </div>
-          </Form> */}
+          </Form>
 
           {/* details */}
           <div className="contain rounded-md flex flex-col sm:flex-row gap-y-2 sm:items-center sm:justify-between">
@@ -152,5 +167,17 @@ export default function Onboarding() {
         <ModeToggle />
       </section>
     </main>
+  );
+}
+
+export function ErrorBoundary() {
+  const error: unknown | any = useRouteError();
+  // console.error(error);
+  return (
+    <div>
+      <h1>Ooops! there was an error</h1>
+
+      <p>cause: {error.data}</p>
+    </div>
   );
 }

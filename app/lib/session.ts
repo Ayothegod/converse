@@ -27,3 +27,26 @@ export const getUserSessionData = async (request: any) => {
   //   const headers = await getUserSessionData(request)
   //   return json(null, { headers });
 };
+
+export const updateUserSessionData = async (
+  request: any,
+  user: any,
+  username: string
+) => {
+  const session = await getSession(request.headers.get("Cookie"));
+
+  session.unset(authenticator.sessionKey);
+
+  const newSessionBody = { ...user, username };
+
+  session.set(authenticator.sessionKey, newSessionBody);
+  
+  const sessionData = (await session.get("sessionKey")) || null;
+
+  const userCookie = await commitSession(session);
+  const headers = new Headers({ "Set-Cookie": userCookie });
+
+  return { sessionData, headers };
+  //   const headers = await getUserSessionData(request)
+  //   return json(null, { headers });
+};
