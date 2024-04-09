@@ -7,6 +7,7 @@ import {
   Form,
   json,
   redirect,
+  useActionData,
   useLoaderData,
   useRouteError,
   useSearchParams,
@@ -39,7 +40,6 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
   const { sessionData, headers } = await getUserSessionData(request);
-  console.log({ sessionData: sessionData });
 
   if (user && user?.typeOfUser === "new_user") {
     if (sessionData && sessionData.username) {
@@ -67,13 +67,14 @@ export async function action({ request }: ActionFunctionArgs) {
   //   return null;
   // }
   if (intent === "updateUsername" && username !== null) {
-    const { headers, sessionData: data } = await updateUsername(
-      request,
-      sessionData,
-      username
-    );
-    console.log(data);
+    const result = await updateUsername(request, sessionData, username);
 
+    if (result.errors) {
+      return json({ errors: result.errors });
+    }
+
+    const headers = await result.headers
+    console.log(result.sessionData);
     return redirect("/dashboard", { headers });
   }
   errorResponse("Unknown Action", 500);
@@ -81,6 +82,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Onboarding() {
   const data = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
 
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "skip";
@@ -99,6 +101,11 @@ export default function Onboarding() {
             <div className="contain p-2 flex items-end justify-between gap-2">
               <div className="flex flex-col item-start gap-1 w-full">
                 <Label className="text-xs font-medium">choose username</Label>
+                {actionData?.errors?.username ? (
+                  <em className="text-xs text-red-600">
+                    {actionData?.errors.username}
+                  </em>
+                ) : null}
                 <Input
                   type="text"
                   name="username"

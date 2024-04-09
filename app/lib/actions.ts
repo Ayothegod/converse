@@ -1,3 +1,4 @@
+import { json } from "@remix-run/node";
 import prisma from "./db";
 import { updateUserSessionData } from "./session";
 
@@ -7,13 +8,31 @@ export const errorResponse = (body: string, status: number) => {
   });
 };
 
+type Error = {
+  username?: string;
+  password?: string;
+};
+
+interface UpdateResult {
+  errors?: any;
+  sessionData?: any;
+  headers?: Headers;
+}
+// Record<string, string>
 export const updateUsername = async (
   request: any,
   user: any,
   username: any
-) => {
+): Promise<UpdateResult> => {
   try {
-    // TODO: check is username exists
+    const errors: any = {};
+    if (username.length < 6) {
+      errors.username = "Username should be at least 6 characters";
+    }
+    if (username.length > 30) {
+      errors.username = "Username should not be more than 30 characters";
+    }
+
     const usernameExists = await prisma.user.findUnique({
       where: {
         username: username,
@@ -21,11 +40,12 @@ export const updateUsername = async (
     });
 
     if (usernameExists) {
-      errorResponse("This username is not available", 401);
+      errors.username = "This username already exist, please choose another";
     }
-    if (username.length < 6) {
-      errorResponse("Username must be up to six characters", 401);
+    if (Object.keys(errors).length > 0) {
+      return { errors };
     }
+
     const addUsername = await prisma.user.update({
       where: {
         id: user?.userId,
@@ -42,9 +62,8 @@ export const updateUsername = async (
     );
     return { sessionData, headers };
   } catch (error) {
-    throw new Response("Username ", {
+    throw new Response("Username not updated! please try again", {
       status: 404,
     });
-    // Username not updated! please try again
   }
 };
