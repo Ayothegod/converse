@@ -1,26 +1,43 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useSearchParams } from "@remix-run/react";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-    return null
-  }
+// export async function loader({ request }: LoaderFunctionArgs) {
+//     return null
+//   }
+
 export default function List() {
+//   const [searchParams] = useSearchParams();
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "list";
 
   return (
     <div className="m-24">
-      <Form >
-        <button name="view" value="list" className="bg-red-600">
+      <Form className="space-x-8">
+        <button
+          name="view"
+          value="list"
+          className=" bg-dark-primary hover:bg-dark-foreground hover:shadow-xl p-2 rounded text-sm font-bold text-light-primary"
+        >
           View as List
         </button>
-        <button name="view" value="details">
+        <button
+          name="view"
+          value="details"
+          className=" bg-dark-bg p-2 hover:bg-dark-foreground hover:shadow-xl rounded text-sm font-bold text-light-primary"
+        >
           View with Details
         </button>
       </Form>
 
-      <p className="text-4xl text-emerald-600 m-20">Hello</p>
-      {view === "list" ? "<ListView />" : "<DetailView />"}
+      <p className="text-4xl font-bold text-emerald-600 m-10">Test Stuff</p>
+      {view === "list" 
+      ? 
+      <div className="max-h-10 overflow-hidden border border-red-400">
+
+      <input type="text" placeholder="enter list details" className="-translate-y-10"/> 
+      </div>
+      : 
+      "<DetailView />"}
     </div>
   );
 }

@@ -5,9 +5,10 @@ import prisma from "~/lib/db";
 import { sessionStorage } from "~/services/session.server";
 
 type User = {
-  userId: string;
-  userEmail: string;
+  userId: string | undefined;
+  userEmail: string | undefined;
   typeOfUser: string;
+  userUsername: string | null | undefined;
 };
 
 export let authenticator = new Authenticator<User | null>(sessionStorage, {
@@ -61,8 +62,9 @@ try {
           const userId: string = await user.id;
           const typeOfUser: string = "new_user";
           const userEmail: string | undefined = await user?.email;
+          const userUsername: string | null | undefined = await user?.username;
 
-          return { userId, userEmail, typeOfUser };
+          return { userId, userEmail, typeOfUser, userUsername };
         }
 
         console.log("theres user");
@@ -80,11 +82,12 @@ try {
           return null;
         }
 
-        const userId: string = await user?.id;
-        const userEmail: string = await user?.email;
+        const userId: string | undefined = await user?.id;
+        const userEmail: string | undefined = await user?.email;
+        const userUsername: string | null | undefined = await user?.username;
         const typeOfUser: string = "returning_user";
 
-        return { userId, userEmail, typeOfUser };
+        return { userId, userEmail, typeOfUser, userUsername };
       } else {
         // if problem with user throw error AuthorizationError
         throw new AuthorizationError("Bad Credentials");
