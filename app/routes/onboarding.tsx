@@ -39,11 +39,10 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
   const { sessionData, headers } = await getUserSessionData(request);
-  // console.log({sessionData:sessionData});
-  // console.log({user: user});
+  console.log({ sessionData: sessionData });
 
   if (user && user?.typeOfUser === "new_user") {
-    if (sessionData?.username !== null) {
+    if (sessionData && sessionData.username) {
       return redirect("/dashboard", { headers });
     }
     return json(user, { headers });
@@ -72,19 +71,16 @@ export async function action({ request }: ActionFunctionArgs) {
       request,
       sessionData,
       username
-    )
+    );
     console.log(data);
-    
 
-    return json(data, { headers });
-    // errorResponse("Username not updated! please try again later...", 404);
+    return redirect("/dashboard", { headers });
   }
   errorResponse("Unknown Action", 500);
 }
 
 export default function Onboarding() {
   const data = useLoaderData<typeof loader>();
-  // console.log(data);
 
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "skip";

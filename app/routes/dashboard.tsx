@@ -45,7 +45,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="text-5xl text-white font-bol underline">
+      <div className="text-5xl font-bol underline">
         dashboard route available dffjddfnmsnm omg heelldklsd
       </div>
 

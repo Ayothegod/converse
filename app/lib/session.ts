@@ -10,8 +10,6 @@ export const setUserSessionData = async (request: any, user: any) => {
   const userCookie = await commitSession(session);
   const headers = new Headers({ "Set-Cookie": userCookie });
 
-  console.log({ action: session.get("sessionKey") });
-
   return headers;
 };
 
@@ -40,7 +38,7 @@ export const updateUserSessionData = async (
   const newSessionBody = { ...user, username };
 
   session.set(authenticator.sessionKey, newSessionBody);
-  
+
   const sessionData = (await session.get("sessionKey")) || null;
 
   const userCookie = await commitSession(session);

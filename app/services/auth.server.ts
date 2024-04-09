@@ -8,7 +8,6 @@ type User = {
   userId: string | undefined;
   userEmail: string | undefined;
   typeOfUser: string;
-  userUsername: string | null | undefined;
 };
 
 export let authenticator = new Authenticator<User | null>(sessionStorage, {
@@ -62,9 +61,8 @@ try {
           const userId: string = await user.id;
           const typeOfUser: string = "new_user";
           const userEmail: string | undefined = await user?.email;
-          const userUsername: string | null | undefined = await user?.username;
 
-          return { userId, userEmail, typeOfUser, userUsername };
+          return { userId, userEmail, typeOfUser};
         }
 
         console.log("theres user");
@@ -84,10 +82,9 @@ try {
 
         const userId: string | undefined = await user?.id;
         const userEmail: string | undefined = await user?.email;
-        const userUsername: string | null | undefined = await user?.username;
         const typeOfUser: string = "returning_user";
 
-        return { userId, userEmail, typeOfUser, userUsername };
+        return { userId, userEmail, typeOfUser };
       } else {
         // if problem with user throw error AuthorizationError
         throw new AuthorizationError("Bad Credentials");
