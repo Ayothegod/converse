@@ -38,12 +38,10 @@ const config = {
         "neutral-gray":"#888888",
       },
       fontFamily:{
-        "poppins":["Poppins", "sans-serif"],
+        "inter":["Inter", "sans-serif"],
         "orbitron": ['Orbitron', "sans-serif"],
         "josefin": ['Josefin Sans', "sans-serif"],
         "courgette": [ 'Courgette', "cursive"],
-
-        "light-gray": [ '#f8f9fa', "#e9ecef", "#dee2e6", "#ced4da", "#adb5bd", "#6c757d","#495057", "#343a40", "#212529"],
 
         "dark-variation": [ '#09090c',
         // perfect

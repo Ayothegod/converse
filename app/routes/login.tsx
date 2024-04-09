@@ -84,7 +84,7 @@ export default function Screen() {
             <Label className="text-xs text-right text-primary">
               Forgot Password?
             </Label>
-            <Button className="w-full bg-primary gap-2">
+            <Button className="w-full bg-primary gap-2 ">
               {state === "idle" ? null : <Loader2 className={`animate-spin`} />}
               {state === "idle"
                 ? "Log in"

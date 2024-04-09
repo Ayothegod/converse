@@ -6,7 +6,7 @@ import { Form, useSearchParams } from "@remix-run/react";
 //   }
 
 export default function List() {
-//   const [searchParams] = useSearchParams();
+//   const [searchParams] = useSearchPar ams();
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "list";
 
