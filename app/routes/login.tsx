@@ -12,7 +12,12 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { setUserSessionData } from "~/lib/session";
 import { authenticator } from "~/services/auth.server";
-import { toast } from "sonner"
+import {
+  jsonWithSuccess,
+  jsonWithError,
+  redirectWithError,
+  redirectWithSuccess,
+} from "remix-toast";
 
 export const meta: MetaFunction = () => {
   return [
@@ -29,12 +34,27 @@ export async function action({ request }: ActionFunctionArgs) {
   let user = await authenticator.authenticate("user-pass", request, {
     failureRedirect: "/login",
   });
-  toast("Event has been created.")
   const headers = await setUserSessionData(request, user);
 
-  if (user?.typeOfUser === "returning_user")
-    return redirect("/dashboard", { headers });
-  return redirect("/onboarding", { headers });
+  if (user?.typeOfUser === "returning_user") {
+    return redirectWithSuccess(
+      "/dashboard",
+      {
+        message: "User login successful!",
+        description: "description of toast",
+      },
+      { headers }
+    );
+  }
+  return redirectWithSuccess(
+    "/onboarding",
+    {
+      message: "User account created successfully 🎉",
+      description: "time for onboarding...",
+    },
+    { headers }
+  );
+  // return redirect("/onboarding", { headers });
 }
 
 // check if user session already exists

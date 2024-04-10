@@ -1,39 +1,31 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useActionData, useSearchParams } from "@remix-run/react";
+import { ActionFunctionArgs } from "@remix-run/node";
+import { Form } from "@remix-run/react";
+import {
+  jsonWithSuccess,
+  redirectWithError,
+  redirectWithSuccess
+} from "remix-toast";
 import { Button } from "~/components/ui/button";
-import { useEffect } from "react";
-// export async function loader({ request }: LoaderFunctionArgs) {
-//   return null;
-// }
-import { jsonWithSuccess, jsonWithError } from "remix-toast";
 
 export async function action({ request }: ActionFunctionArgs) {
   const test = true;
   if (test) {
-    console.log("fetch data");
-    // return jsonWithSuccess(
-    //   { result: "Data saved successfully" },
-    //   "Operation successful! 🎉"
-    // );
-    return jsonWithSuccess(
+    const toast = jsonWithSuccess(
       { result: "Data saved successfully" },
       {
         message: "Operation successful! 🎉",
-        description: "dksdklklsdklsdklklsdmds dskdskllsdklds",
+        description: "description of toast",
       }
     );
+    return redirectWithSuccess("/login", {
+      message: "You are logged in!",
+      description: "description of toast",
+    }, {});
   }
-
-
-  console.log("false: unable to fetch data");
-  return jsonWithError(
-    null,
-    "Oops! Something went wrong. Please try again later."
-  );
+  return redirectWithError("/login", "You need to login to access this page");
 }
 
 export default function List() {
-
   return (
     <div className="m-48">
       {/* search params state */}

@@ -35,15 +35,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function AppWithProviders() {
   const { theme, toast } = useLoaderData<typeof loader>();
-  // data.toast
   useEffect(() => {
     if (toast?.type === "error") {
-      notify.error(toast.message);
+      notify.error(toast.message, {
+        duration: 3000,
+        description: toast.description,
+        position: "top-right",
+      });
     }
     if (toast?.type === "success") {
       notify.success(toast.message, {
-        duration: 2000,
+        duration: 3000,
         description: toast.description,
+        position: "top-right",
       });
     }
   }, [toast]);

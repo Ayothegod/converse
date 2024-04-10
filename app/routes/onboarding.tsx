@@ -41,6 +41,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
   const { sessionData, headers } = await getUserSessionData(request);
+  console.log({sessionData});
 
   if (user && user?.typeOfUser === "new_user") {
     if (sessionData && sessionData.username) {
