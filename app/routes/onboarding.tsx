@@ -14,6 +14,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { Loader2, User } from "lucide-react";
+import { redirectWithSuccess } from "remix-toast";
 import BuildList from "~/components/build/BuildList";
 import { ModeToggle } from "~/components/build/ModeToggle";
 import { Button } from "~/components/ui/button";
@@ -41,7 +42,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
   const { sessionData, headers } = await getUserSessionData(request);
-  console.log({sessionData});
+  console.log("visited onboarding");
 
   if (user && user?.typeOfUser === "new_user") {
     if (sessionData && sessionData.username) {
@@ -63,11 +64,12 @@ export async function action({ request }: ActionFunctionArgs) {
   // if (intent === "start") {
   //   console.log("start");
   //   return null;
-  // }
   // if (intent === "skip") {
   //   console.log("skip");
   //   return null;
   // }
+  // }
+
   if (intent === "updateUsername" && username !== null) {
     const result = await updateUsername(request, sessionData, username);
 
@@ -77,8 +79,16 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const headers = await result.headers;
     console.log(result.sessionData);
-    return redirect("/dashboard", { headers });
+    return redirectWithSuccess(
+      "/dashboard",
+      {
+        message: "User registration completed!",
+        description: "time to babble 😎",
+      },
+      { headers }
+    );
   }
+
   errorResponse("Unknown Action", 500);
 }
 

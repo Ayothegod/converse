@@ -29,7 +29,6 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-// login or signup
 export async function action({ request }: ActionFunctionArgs) {
   let user = await authenticator.authenticate("user-pass", request, {
     failureRedirect: "/login",
@@ -41,7 +40,7 @@ export async function action({ request }: ActionFunctionArgs) {
       "/dashboard",
       {
         message: "User login successful!",
-        description: "description of toast",
+        description: "continue from where youn left off ⚡",
       },
       { headers }
     );
@@ -54,10 +53,8 @@ export async function action({ request }: ActionFunctionArgs) {
     },
     { headers }
   );
-  // return redirect("/onboarding", { headers });
 }
 
-// check if user session already exists
 export async function loader({ request }: LoaderFunctionArgs) {
   return await authenticator.isAuthenticated(request, {
     successRedirect: "/dashboard",

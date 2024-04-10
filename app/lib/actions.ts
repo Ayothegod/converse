@@ -2,12 +2,6 @@ import { json } from "@remix-run/node";
 import prisma from "./db";
 import { updateUserSessionData } from "./session";
 
-export const errorResponse = (body: string, status: number) => {
-  throw new Response(body, {
-    status: status,
-  });
-};
-
 type Error = {
   username?: string;
   password?: string;
@@ -18,7 +12,15 @@ interface UpdateResult {
   sessionData?: any;
   headers?: Headers;
 }
-// Record<string, string>
+
+// NOTE: error response
+export const errorResponse = (body: string, status: number) => {
+  throw new Response(body, {
+    status: status,
+  });
+};
+
+// NOTE: update Username
 export const updateUsername = async (
   request: any,
   user: any,

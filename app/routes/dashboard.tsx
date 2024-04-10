@@ -2,6 +2,7 @@ import { authenticator } from "~/services/auth.server";
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Form, json } from "@remix-run/react";
 import { useLoaderData, useActionData } from "@remix-run/react";
+import { getUserSessionData } from "~/lib/session";
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,26 +15,14 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  let user;
-  return (user = await authenticator.isAuthenticated(request, {
+  const {headers, sessionData} = await getUserSessionData(request)
+  console.log(sessionData);
+  
+  let user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
-  }));
+  })
+  return {user, sessionData}
 }
-
-// async function action({ request }: ActionFunctionArgs) {
-//   const formData = await request.formData();
-//   const _action = formData.get("_action");
-
-//   if (_action === "edit") {
-//     return { ok: true };
-//   }
-
-//   if (_action === "logout") {
-//     return await authenticator.logout(request, { redirectTo: "/login" });
-//   }
-
-//   throw new Error("Unknown action")
-// }
 
 export async function action({ request }: ActionFunctionArgs) {
   await authenticator.logout(request, { redirectTo: "/login" });
@@ -41,30 +30,17 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
-  // console.log(data);
+  // TODO: if user logins, there will be no username on the session object
 
   return (
     <>
-      <div className="text-5xl font-bol underline">
-        dashboard route available dffjddfnmsnm omg heelldklsd
+      <div className="text-5xl font-bold text-black dark:text-white">
+        dashboard route
       </div>
 
-      {/* <div>
-        {JSON.stringify(data, null, 2)}
-      </div> */}
-
-      {/* update stuff */}
-      <Form method="post">
-        <button type="submit" name="_action" value="edit">
-          Edit
-        </button>
-      </Form>
-
-      {/* <Form method="post">
-        <button type="submit">
-          Logout
-        </button>
-      </Form> */}
+      {
+        JSON.stringify(data.sessionData, null, 8)
+      }
 
       {/* logout */}
       <Form method="post">
@@ -75,81 +51,3 @@ export default function Dashboard() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-// import {
-//   Links,
-//   Meta,
-//   Outlet,
-//   Scripts,
-//   ScrollRestoration,
-//   useLoaderData
-// } from "@remix-run/react";
-// import clsx from "clsx";
-// import {
-//   PreventFlashOnWrongTheme,
-//   ThemeProvider,
-//   useTheme,
-// } from "remix-themes";
-// import stylesheet from "~/tailwind.css?url";
-// import { themeSessionResolver } from "./services/themeSession.server";
-
-// export const links: LinksFunction = () => [
-//   { rel: "stylesheet", href: stylesheet },
-// ];
-
-// // export async function loader({ request }: LoaderFunctionArgs) {
-// //   const { getTheme } = await themeSessionResolver(request);
-// //   return {
-// //     theme: getTheme(),
-// //   };
-// // }
-
-// export function Layout({ children }: { children: React.ReactNode }) {
-//   // const data = useLoaderData<typeof loader>();
-//   // const [theme] = useTheme()
-//   return (
-//     // <html lang="en" className={clsx(theme)}>
-//     <html lang="en">
-//       <head>
-//         <meta charSet="utf-8" />
-//         <meta name="viewport" content="width=device-width, initial-scale=1" />
-//         <Meta />
-//         {/* <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} /> */}
-//         <Links />
-//       </head>
-//       <body>
-//         {/* <ThemeProvider
-//           specifiedTheme={data.theme}
-//           themeAction="/action/set-theme"
-//         > */}
-//           {children}
-//         {/* </ThemeProvider> */}
-//         <ScrollRestoration />
-//         <Scripts />
-//       </body>
-//     </html>
-//   );
-// }
-
-// export default function App() {
-//   return (
-//     <Outlet />
-//   )
-// }
