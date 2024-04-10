@@ -2,6 +2,7 @@
 ### Todos
 - add auth carousel assets
 - later remove testStuff route and buildlist
+- add validation for login route
 
 - all blue pallete
 <!-- https://coolors.co/palette/e3f2fd-bbdefb-90caf9-64b5f6-42a5f5-2196f3-1e88e5-1976d2-1565c0-0d47a1 -->

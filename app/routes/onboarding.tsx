@@ -9,10 +9,11 @@ import {
   redirect,
   useActionData,
   useLoaderData,
+  useNavigation,
   useRouteError,
   useSearchParams,
 } from "@remix-run/react";
-import { User } from "lucide-react";
+import { Loader2, User } from "lucide-react";
 import BuildList from "~/components/build/BuildList";
 import { ModeToggle } from "~/components/build/ModeToggle";
 import { Button } from "~/components/ui/button";
@@ -73,7 +74,7 @@ export async function action({ request }: ActionFunctionArgs) {
       return json({ errors: result.errors });
     }
 
-    const headers = await result.headers
+    const headers = await result.headers;
     console.log(result.sessionData);
     return redirect("/dashboard", { headers });
   }
@@ -81,6 +82,9 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Onboarding() {
+  const { state } = useNavigation();
+  const busy = state === "submitting";
+
   const data = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
@@ -119,9 +123,10 @@ export default function Onboarding() {
                 variant="primary"
                 name="intent"
                 value="updateUsername"
-                className=" font-bold"
+                className="font-bold"
               >
-                continue
+                {busy ? "loading" : "continue"}
+                {busy ? <Loader2 className={`animate-spin`} /> : null}
               </Button>
             </div>
           </Form>
@@ -177,10 +182,12 @@ export function ErrorBoundary() {
   const error: unknown | any = useRouteError();
   // console.error(error);
   return (
-    <div>
-      <h1>Ooops! there was an error</h1>
+    <main className=" flex items-center justify-center h-screen p-4">
+      <section className="mx-auto w-full sm:w-[80vw] md:w-[60vw] lg:w-[50%] flex flex-col bg-light-bg dark:bg-dark-bg rounded-md overflow-hidden p-2">
+        <h1>Ooops! there was an error</h1>
 
-      <p>cause: {error.data}</p>
-    </div>
+        <p>cause: {error.data}</p>
+      </section>
+    </main>
   );
 }
