@@ -119,6 +119,9 @@ dependencies:
   remix-themes:
     specifier: ^1.3.1
     version: 1.3.1(@remix-run/react@2.8.1)(@remix-run/server-runtime@2.8.1)
+  remix-toast:
+    specifier: ^1.2.0
+    version: 1.2.0(@remix-run/server-runtime@2.8.1)
   sonner:
     specifier: ^1.4.41
     version: 1.4.41(react-dom@18.2.0)(react@18.2.0)
@@ -6623,6 +6626,15 @@ packages:
     dependencies:
       '@remix-run/react': 2.8.1(react-dom@18.2.0)(react@18.2.0)(typescript@5.4.3)
       '@remix-run/server-runtime': 2.8.1(typescript@5.4.3)
+    dev: false
+
+  /remix-toast@1.2.0(@remix-run/server-runtime@2.8.1):
+    resolution: {integrity: sha512-JxGfTFKsO+zxuvJLPiwno5dwiPdjFqF6a8/izvV4yA56UNb2AjfyNa9FYnYUmoocq77xeR++dYCZyRG1YUqrjQ==}
+    peerDependencies:
+      '@remix-run/server-runtime': '>=1.15'
+    dependencies:
+      '@remix-run/server-runtime': 2.8.1(typescript@5.4.3)
+      zod: 3.22.4
     dev: false
 
   /require-like@0.1.2:

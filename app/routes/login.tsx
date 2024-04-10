@@ -12,6 +12,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { setUserSessionData } from "~/lib/session";
 import { authenticator } from "~/services/auth.server";
+import { toast } from "sonner"
 
 export const meta: MetaFunction = () => {
   return [
@@ -28,6 +29,7 @@ export async function action({ request }: ActionFunctionArgs) {
   let user = await authenticator.authenticate("user-pass", request, {
     failureRedirect: "/login",
   });
+  toast("Event has been created.")
   const headers = await setUserSessionData(request, user);
 
   if (user?.typeOfUser === "returning_user")

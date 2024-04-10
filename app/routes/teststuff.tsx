@@ -1,18 +1,39 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useSearchParams } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { Form, useActionData, useSearchParams } from "@remix-run/react";
+import { Button } from "~/components/ui/button";
+import { useToast } from "../components/ui/use-toast";
+import { useEffect } from "react";
+export async function loader({ request }: LoaderFunctionArgs) {
+  return null;
+}
 
-// export async function loader({ request }: LoaderFunctionArgs) {
-//     return null
-//   }
+export async function action({ request }: ActionFunctionArgs) {
+  const test = true;
+  if (test) {
+    console.log("fetch data");
+    return test;
+  }
+
+  console.log("false: cant fetch data");
+  return null;
+}
 
 export default function List() {
-//   const [searchParams] = useSearchPar ams();
+  const toast = useToast();
+  const test = useActionData<typeof action>();
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "list";
 
+  useEffect(() => {
+    if(test){
+      
+    }
+  }, [toast, test]);
   return (
-    <div className="m-24">
-      <Form className="space-x-8">
+    <div className="m-48">
+      {/* search params state */}
+      <div>
+        {/* <Form className="space-x-8">
         <button
           name="view"
           value="list"
@@ -37,7 +58,15 @@ export default function List() {
       <input type="text" placeholder="enter list details" className="-translate-y-10"/> 
       </div>
       : 
-      "<DetailView />"}
+      "<DetailView />"} */}
+      </div>
+
+      {/* handle toast */}
+      <div>
+        <Form method="post">
+          <Button>Fetch Data</Button>
+        </Form>
+      </div>
     </div>
   );
 }

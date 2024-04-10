@@ -17,7 +17,7 @@ import {
 } from "remix-themes";
 import stylesheet from "~/tailwind.css?url";
 import { themeSessionResolver } from "./services/themeSession.server";
-// import { Toaster } from "./components/ui/sonner"
+import { Toaster } from "./components/ui/toaster";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -53,11 +53,11 @@ export function App() {
         <Links />
       </head>
       <body className="font-inter">
-      {/* <Toaster /> */}
         <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <Toaster />
       </body>
     </html>
   );
