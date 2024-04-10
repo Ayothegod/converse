@@ -1,34 +1,39 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useActionData, useSearchParams } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
-import { useToast } from "../components/ui/use-toast";
 import { useEffect } from "react";
-export async function loader({ request }: LoaderFunctionArgs) {
-  return null;
-}
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   return null;
+// }
+import { jsonWithSuccess, jsonWithError } from "remix-toast";
 
 export async function action({ request }: ActionFunctionArgs) {
   const test = true;
   if (test) {
     console.log("fetch data");
-    return test;
+    // return jsonWithSuccess(
+    //   { result: "Data saved successfully" },
+    //   "Operation successful! 🎉"
+    // );
+    return jsonWithSuccess(
+      { result: "Data saved successfully" },
+      {
+        message: "Operation successful! 🎉",
+        description: "dksdklklsdklsdklklsdmds dskdskllsdklds",
+      }
+    );
   }
 
-  console.log("false: cant fetch data");
-  return null;
+
+  console.log("false: unable to fetch data");
+  return jsonWithError(
+    null,
+    "Oops! Something went wrong. Please try again later."
+  );
 }
 
 export default function List() {
-  const toast = useToast();
-  const test = useActionData<typeof action>();
-  const [searchParams] = useSearchParams();
-  const view = searchParams.get("view") || "list";
 
-  useEffect(() => {
-    if(test){
-      
-    }
-  }, [toast, test]);
   return (
     <div className="m-48">
       {/* search params state */}

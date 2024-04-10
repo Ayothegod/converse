@@ -8,6 +8,7 @@ import {
   useLoaderData,
   useRouteError,
   LiveReload,
+  json,
 } from "@remix-run/react";
 import clsx from "clsx";
 import {
@@ -17,7 +18,9 @@ import {
 } from "remix-themes";
 import stylesheet from "~/tailwind.css?url";
 import { themeSessionResolver } from "./services/themeSession.server";
-import { Toaster } from "./components/ui/toaster";
+import { getToast } from "remix-toast";
+import { useEffect } from "react";
+import { Toaster, toast as notify } from "sonner";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -25,16 +28,28 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { getTheme } = await themeSessionResolver(request);
+  const { toast, headers } = await getToast(request);
   const theme = await getTheme();
-  return {
-    theme: theme,
-  };
+  return json({ theme, toast }, { headers });
 }
 
 export default function AppWithProviders() {
-  const data = useLoaderData<typeof loader>();
+  const { theme, toast } = useLoaderData<typeof loader>();
+  // data.toast
+  useEffect(() => {
+    if (toast?.type === "error") {
+      notify.error(toast.message);
+    }
+    if (toast?.type === "success") {
+      notify.success(toast.message, {
+        duration: 2000,
+        description: toast.description,
+      });
+    }
+  }, [toast]);
+
   return (
-    <ThemeProvider specifiedTheme={data.theme} themeAction="/action/set-theme">
+    <ThemeProvider specifiedTheme={theme} themeAction="/action/set-theme">
       <App />
     </ThemeProvider>
   );
