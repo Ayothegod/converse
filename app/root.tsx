@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useRouteError,
+  LiveReload,
 } from "@remix-run/react";
 import clsx from "clsx";
 import {
@@ -16,6 +17,7 @@ import {
 } from "remix-themes";
 import stylesheet from "~/tailwind.css?url";
 import { themeSessionResolver } from "./services/themeSession.server";
+// import { Toaster } from "./components/ui/sonner"
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -51,9 +53,11 @@ export function App() {
         <Links />
       </head>
       <body className="font-inter">
+      {/* <Toaster /> */}
         <Outlet />
         <ScrollRestoration />
         <Scripts />
+        <LiveReload />
       </body>
     </html>
   );
@@ -71,7 +75,6 @@ export function ErrorBoundary() {
       </head>
       <body>
         <p>Error Page</p>
-        {/* add the UI you want your users to see */}
         <Scripts />
       </body>
     </html>
