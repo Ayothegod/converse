@@ -1,16 +1,27 @@
 import { json } from "@remix-run/node";
 import prisma from "./db";
-import { updateUserSessionData } from "./session";
+import { updateUserSessionData, getUserSessionData } from "./session";
 
 type Error = {
   username?: string;
   password?: string;
+  image?: string;
 };
 
-interface UpdateResult {
+type imageError = {
+  image?: string;
+  username?: string
+};
+
+interface UpdateUsername {
   errors?: Error;
   sessionData?: any;
   headers?: Headers;
+}
+
+interface GenerateImage {
+  errors?: imageError;
+  result?: any;
 }
 
 // NOTE: error response
@@ -20,12 +31,43 @@ export const errorResponse = (body: string, status: number) => {
   });
 };
 
+// NOTE: generateImage
+export const addGeneratedRandomImage = async (
+  request: any
+): Promise<GenerateImage> => {
+  try {
+    const errors: imageError = {};
+    const { sessionData } = await getUserSessionData(request);
+    const generatedImg = await process.env.RANDOMIMG_URL;
+    const addImage = await prisma.user.update({
+      where: { id: sessionData.userId },
+      data: { defaultImageUrl: generatedImg },
+      select: {
+        defaultImageUrl: true,
+        id: true,
+      },
+    });
+    if (!addImage) {
+      errors.image = "you can't skip right now, try again later!";
+    }
+    if (Object.keys(errors).length > 0) {
+      return { errors };
+    }
+
+    return { result: addImage };
+  } catch (error) {
+    throw new Response("Unable to generate image", {
+      status: 500,
+    });
+  }
+};
+
 // NOTE: update Username
 export const updateUsername = async (
   request: any,
   user: any,
   username: any
-): Promise<UpdateResult> => {
+): Promise<UpdateUsername> => {
   try {
     const errors: Error = {};
     if (username.length < 6) {

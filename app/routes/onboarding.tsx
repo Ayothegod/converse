@@ -20,7 +20,11 @@ import { ModeToggle } from "~/components/build/ModeToggle";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { errorResponse, updateUsername } from "~/lib/actions";
+import {
+  addGeneratedRandomImage,
+  errorResponse,
+  updateUsername,
+} from "~/lib/actions";
 import prisma from "~/lib/db";
 import { getUserSessionData } from "~/lib/session";
 import { authenticator } from "~/services/auth.server";
@@ -42,7 +46,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request);
   const { sessionData, headers } = await getUserSessionData(request);
-  console.log("visited onboarding");
+  // console.log("visited onboarding");
 
   if (user && user?.typeOfUser === "new_user") {
     // if (sessionData && sessionData.username) {
@@ -67,8 +71,10 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
 
   const intent = await formData.get("intent");
+  const view = await formData.get("view");
   const username = formData.get("username");
 
+  // NOTE: update/add username
   if (intent === "updateUsername" && username !== null) {
     const result = await updateUsername(request, sessionData, username);
 
@@ -87,16 +93,26 @@ export async function action({ request }: ActionFunctionArgs) {
       { headers }
     );
   }
+  // NOTE: skip user details
+  if (intent === "skip") {
+    const { errors, result } = await addGeneratedRandomImage(request);
+    if (errors) {
+      return json({ errors, result: null });
+    }
+    console.log(result);
+
+    // return redirectWithSuccess(
+    //   "/dashboard",
+    //   {
+    //     message: "User details registration skipped!",
+    //     description: "to continue, go to the profile section",
+    //   },
+    //   { headers }
+    // );
+    return null;
+  }
   errorResponse("Unknown Action", 500);
 }
-// return redirectWithSuccess(
-//   "/dashboard",
-//   {
-//     message: "User registration completed!",
-//     description: "time to babble 😎",
-//   },
-//   { headers }
-// );
 
 export default function Onboarding() {
   const { state } = useNavigation();
@@ -137,51 +153,60 @@ export default function Onboarding() {
               </div>
 
               <Button
+                size="sm"
                 variant="primary"
                 name="intent"
                 value="updateUsername"
                 className="font-bold"
+                disabled={busy}
               >
                 {busy ? "loading" : "continue"}
                 {busy ? <Loader2 className={`animate-spin`} /> : null}
               </Button>
             </div>
           </Form>
-
           {/* details */}
           <div className="contain rounded-md flex flex-col sm:flex-row gap-y-2 sm:items-center sm:justify-between">
             <div className="flex items-center gap-1">
               <User />
-              <Label>Update user details</Label>
+              <Label>Add user details</Label>
             </div>
 
-            <Form>
-              {view === "skip" && (
-                <div className="flex gap-2 w-full sm:w-auto">
+            {view === "start" ? null : (
+              <div className="flex gap-2 w-full sm:w-auto">
+                <Form>
                   <Button
                     variant="primary"
                     className="w-full sm:w-auto"
-                    // name="intent"
-                    // value="start"
+                    size="sm"
                     name="view"
                     value="start"
                   >
                     start
                   </Button>
+                </Form>
+                <Form method="post">
                   <Button
                     className="w-full sm:w-auto"
-                    // name="intent"
-                    // value="skip"
-                    name="view"
+                    size="sm"
+                    name="intent"
                     value="skip"
+                    // name="view"
+                    // value="skip"
                   >
                     skip
                   </Button>
-                </div>
-              )}
-            </Form>
+                </Form>
+              </div>
+            )}
           </div>
+          {actionData?.errors?.image ? (
+            <em className="text-xs text-red-600">
+              {actionData?.errors?.image}
+            </em>
+          ) : null}
 
+          {/* DEBUG:start updating user details */}
           {view === "skip" ? null : (
             <div className="contain">
               <p>update user details</p>
