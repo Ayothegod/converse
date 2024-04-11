@@ -2,17 +2,6 @@ import { json } from "@remix-run/node";
 import prisma from "./db";
 import { updateUserSessionData, getUserSessionData } from "./session";
 
-type Error = {
-  username?: string;
-  password?: string;
-  image?: string;
-};
-
-type imageError = {
-  image?: string;
-  username?: string
-};
-
 interface UpdateUsername {
   errors?: Error;
   sessionData?: any;
@@ -20,9 +9,19 @@ interface UpdateUsername {
 }
 
 interface GenerateImage {
-  errors?: imageError;
+  errors?: Error;
   result?: any;
 }
+
+type Error = {
+  username?: string;
+  password?: string;
+  image?: string;
+  addUserInfo?: string;
+  fullname?: string;
+  bio?: string;
+  punchline?: string;
+};
 
 // NOTE: error response
 export const errorResponse = (body: string, status: number) => {
@@ -36,7 +35,7 @@ export const addGeneratedRandomImage = async (
   request: any
 ): Promise<GenerateImage> => {
   try {
-    const errors: imageError = {};
+    const errors: Error = {};
     const { sessionData } = await getUserSessionData(request);
     const generatedImg = await process.env.RANDOMIMG_URL;
     const addImage = await prisma.user.update({
@@ -105,6 +104,62 @@ export const updateUsername = async (
       username
     );
     return { sessionData, headers };
+  } catch (error) {
+    throw new Response("Username not updated! please try again", {
+      status: 404,
+    });
+  }
+};
+
+interface AddUserDetails {
+  errors?: Error;
+  addUserInfo?: any;
+}
+
+export const addUserDetails = async (
+  user: any,
+  fullname?: any,
+  punchline?: any,
+  bio?: any
+): Promise<AddUserDetails> => {
+  try {
+    const errors: Error = {};
+    if (fullname && fullname.length < 6) {
+      errors.fullname = "fullname should be at least 6 characters";
+    }
+    if (fullname && fullname.length > 100) {
+      errors.fullname = "fullname should not be more than 100 characters";
+    }
+    if (punchline && punchline.length < 6) {
+      errors.punchline = "punchline should be at least 6 characters";
+    }
+    if (bio && bio.length < 6) {
+      errors.bio = "bio should be at least 6 characters";
+    }
+    if (bio && bio.length > 300) {
+      errors.bio = "bio should not be more than 300 characters";
+    }
+
+    const generatedImg = await process.env.RANDOMIMG_URL;
+
+    const addUserInfo = await prisma.user.update({
+      where: {
+        id: user?.userId,
+      },
+      data: {
+        fullname: fullname || "",
+        punchline: punchline || "",
+        bio: bio || "",
+        defaultImageUrl: generatedImg,
+      },
+    });
+    if (!addUserInfo) {
+      errors.addUserInfo = "add user details failed, try again later!";
+    }
+    if (Object.keys(errors).length > 0) {
+      return { errors };
+    }
+    return { addUserInfo };
   } catch (error) {
     throw new Response("Username not updated! please try again", {
       status: 404,

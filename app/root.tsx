@@ -7,7 +7,6 @@ import {
   ScrollRestoration,
   useLoaderData,
   useRouteError,
-  LiveReload,
   json,
 } from "@remix-run/react";
 import clsx from "clsx";
@@ -75,7 +74,6 @@ export function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
         <Toaster />
       </body>
     </html>
