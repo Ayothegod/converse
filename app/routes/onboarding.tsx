@@ -119,21 +119,24 @@ export async function action({ request }: ActionFunctionArgs) {
     return { errors: null, result: false };
   }
 
-  // NOTE: skip user details
-  if (intent === "skip") {
-    const { errors, result } = await addGeneratedRandomImage(request);
-    if (errors) {
-      return json({ errors, result: null });
-    }
+  if (sessionData.username) {
+    if (intent === "skip") {
+      const { errors, result } = await addGeneratedRandomImage(request);
+      if (errors) {
+        return json({ errors, result: null });
+      }
 
-    return redirectWithSuccess(
-      "/dashboard",
-      {
-        message: "User details registration skipped!",
-        description: "to continue, go to the profile section",
-      },
-      { headers }
-    );
+      return redirectWithSuccess(
+        "/dashboard",
+        {
+          message: "User details registration skipped!",
+          description: "to continue, go to the profile section",
+        },
+        { headers }
+      );
+    }
+  } else {
+    return { errors: null, result: false };
   }
   errorResponse("Unknown Action", 500);
 }
