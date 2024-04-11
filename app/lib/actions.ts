@@ -8,7 +8,7 @@ type Error = {
 };
 
 interface UpdateResult {
-  errors?: any;
+  errors?: Error;
   sessionData?: any;
   headers?: Headers;
 }
@@ -27,7 +27,7 @@ export const updateUsername = async (
   username: any
 ): Promise<UpdateResult> => {
   try {
-    const errors: any = {};
+    const errors: Error = {};
     if (username.length < 6) {
       errors.username = "Username should be at least 6 characters";
     }

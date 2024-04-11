@@ -14,7 +14,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { Loader2, User } from "lucide-react";
-import { redirectWithSuccess } from "remix-toast";
+import { redirectWithSuccess, jsonWithSuccess } from "remix-toast";
 import BuildList from "~/components/build/BuildList";
 import { ModeToggle } from "~/components/build/ModeToggle";
 import { Button } from "~/components/ui/button";
@@ -45,14 +45,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
   console.log("visited onboarding");
 
   if (user && user?.typeOfUser === "new_user") {
-    if (sessionData && sessionData.username) {
-      return redirect("/dashboard", { headers });
-    }
+    // if (sessionData && sessionData.username) {
+    //   return redirect("/dashboard", { headers });
+    // }
     return json(user, { headers });
   } else {
     return redirect("/dashboard", { headers });
   }
 }
+// if (intent === "start") {
+//   console.log("start");
+//   return null;
+// if (intent === "skip") {
+//   console.log("skip");
+//   return null;
+// }
+// }
 
 export async function action({ request }: ActionFunctionArgs) {
   const { sessionData, headers } = await getUserSessionData(request);
@@ -61,36 +69,34 @@ export async function action({ request }: ActionFunctionArgs) {
   const intent = await formData.get("intent");
   const username = formData.get("username");
 
-  // if (intent === "start") {
-  //   console.log("start");
-  //   return null;
-  // if (intent === "skip") {
-  //   console.log("skip");
-  //   return null;
-  // }
-  // }
-
   if (intent === "updateUsername" && username !== null) {
     const result = await updateUsername(request, sessionData, username);
 
     if (result.errors) {
-      return json({ errors: result.errors });
+      return json({ errors: result.errors, result: null });
     }
 
     const headers = await result.headers;
     console.log(result.sessionData);
-    return redirectWithSuccess(
-      "/dashboard",
+
+    return jsonWithSuccess(
+      { errors: null, result: "hello coders" },
       {
-        message: "User registration completed!",
-        description: "time to babble 😎",
+        message: "Username created successfully!🎉",
       },
       { headers }
     );
   }
-
   errorResponse("Unknown Action", 500);
 }
+// return redirectWithSuccess(
+//   "/dashboard",
+//   {
+//     message: "User registration completed!",
+//     description: "time to babble 😎",
+//   },
+//   { headers }
+// );
 
 export default function Onboarding() {
   const { state } = useNavigation();

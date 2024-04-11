@@ -4,20 +4,17 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { Form, redirect, useNavigation } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import { Loader2 } from "lucide-react";
+import {
+  redirectWithSuccess
+} from "remix-toast";
 import { AuthCarousel } from "~/components/build/AuthCarousel";
 import { ModeToggle } from "~/components/build/ModeToggle";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { setUserSessionData } from "~/lib/session";
 import { authenticator } from "~/services/auth.server";
-import {
-  jsonWithSuccess,
-  jsonWithError,
-  redirectWithError,
-  redirectWithSuccess,
-} from "remix-toast";
 
 export const meta: MetaFunction = () => {
   return [
