@@ -1,8 +1,9 @@
 import { authenticator } from "~/services/auth.server";
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Form, json } from "@remix-run/react";
+import { Form, json, redirect } from "@remix-run/react";
 import { useLoaderData, useActionData } from "@remix-run/react";
 import { getUserSessionData } from "~/lib/session";
+import prisma from "~/lib/db";
 
 export const meta: MetaFunction = () => {
   return [
@@ -21,6 +22,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   })
+  const userDetails = await prisma.user.findUnique({
+    where: {
+      id: sessionData.userId,
+    },
+  });
+
+  if (!userDetails?.defaultImageUrl && !userDetails?.username) {
+    return redirect("/onboarding", { headers });
+  }
   return {user, sessionData}
 }
 

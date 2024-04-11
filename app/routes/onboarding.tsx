@@ -51,11 +51,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   // console.log("visited onboarding");
 
   if (user && user?.typeOfUser === "new_user") {
-    // TODO: can fetch userData and check to always redirect on load since it can only work for new users
+    const userDetails = await prisma.user.findUnique({
+      where: {
+        id: user.userId,
+      },
+    });
+    if (userDetails?.defaultImageUrl && userDetails?.username) {
+      return redirect("/dashboard", { headers });
+    }
 
-    // if (sessionData && sessionData.username) {
-    //   return redirect("/dashboard", { headers });
-    // }
     return json(user, { headers });
   } else {
     return redirect("/dashboard", { headers });
