@@ -47,6 +47,7 @@ export default function Dashboard() {
       <div className="text-5xl font-bold text-black dark:text-white">
         dashboard route
       </div>
+      <p>Time to build the main thing</p>
 
       {
         JSON.stringify(data.sessionData, null, 8)
