@@ -1,5 +1,4 @@
 import axios from "axios";
-import useSWR from "swr";
 
 export const axiosInstance = axios.create({
   withCredentials: true,
