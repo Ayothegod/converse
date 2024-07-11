@@ -1,6 +1,5 @@
 // src/ThemeToggle.js
 import { useThemeContext } from "@/lib/hook/theme";
-import React, { useContext } from "react";
 
 const ThemeToggle = () => {
   const { theme, setTheme, } = useThemeContext();
