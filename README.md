@@ -1,3 +1,3 @@
 
 
-# Reactjs and Hono client server starterklk
+# Reactjs and Hono client server starter kit
