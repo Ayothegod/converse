@@ -9,6 +9,7 @@ import LearnSwr, {
   ErrorBoundary,
   Loader as swrLoader,
 } from "./routes/learn.tsx";
+import { ThemeProvider } from "./lib/hook/theme.tsx";
 
 // NOTE: make sure to add errorBoundary to all routes that throw error from loader and actions
 // Add shadcn toast
@@ -66,9 +67,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RootLayout>
-      <RouterProvider router={router} />
-      {/* <Toaster /> */}
-    </RootLayout>
+    <ThemeProvider>
+      <RootLayout>
+        <RouterProvider router={router} />
+        {/* <Toaster /> */}
+      </RootLayout>
+    </ThemeProvider>
   </React.StrictMode>
 );

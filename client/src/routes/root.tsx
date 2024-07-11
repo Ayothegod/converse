@@ -1,3 +1,4 @@
+import ThemeToggle from '@/components/build/ThemeToggle'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { Link, useRouteError } from 'react-router-dom'
@@ -20,6 +21,8 @@ export default function Root() {
 				<Link to="/learnswr" className="underline">
 					Data Mutation
 				</Link>
+
+				<ThemeToggle/>
 			</main>
 		</div>
 	)
