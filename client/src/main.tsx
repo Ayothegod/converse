@@ -1,48 +1,74 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './index.css'
-import MainLayout from './layouts/MainLayout.tsx'
-import RootLayout from './layouts/RootLayout.tsx'
-import Root, { RootError, Loader as rootLoader } from './routes/root.tsx'
-import LearnSwr, { ErrorBoundary, Loader as swrLoader } from './routes/test-action.tsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import MainLayout from "./layouts/MainLayout.tsx";
+import RootLayout from "./layouts/RootLayout.tsx";
+import Root, { RootError, Loader as rootLoader } from "./routes/root.tsx";
+import LearnSwr, {
+  ErrorBoundary,
+  Loader as swrLoader,
+} from "./routes/learn.tsx";
 
 // NOTE: make sure to add errorBoundary to all routes that throw error from loader and actions
+// Add shadcn toast
 
 const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <Root />,
-		errorElement: <RootError />,
-		loader: rootLoader,
-	},
-	{
-		path: '/learnswr',
-		element: <LearnSwr />,
-		errorElement: <ErrorBoundary/>,
-		loader: swrLoader,
-	},
-	// define other routes eg login/register
-	{
-		element: <MainLayout />,
-		children: [
-			// define routes with the same layout
-			// {
-			//   path: "/dashboard",
-			//   element: <Dashboard />,
-			// },
-			// {
-			//   path: "/messages",
-			//   element: <Messages />,
-			// },
-		],
-	},
-])
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <RootError />,
+    loader: rootLoader,
+  },
+  {
+    path: "/learnswr",
+    element: <LearnSwr />,
+    errorElement: <ErrorBoundary />,
+    loader: swrLoader,
+  },
+  // {
+  // 	path: "/register",
+  // 	element: <Register />,
+  // 	errorElement: <ErrorBoundary />,
+  //   },
+  //   {
+  // 	path: "/login",
+  // 	element: <Login />,
+  // 	loader: loginLoader,
+  // 	errorElement: <ErrorBoundary />,
+  //   },
+  {
+    element: <MainLayout />,
+    // errorElement: <MainLayoutError />,
+    // children: [
+    //   {
+    // 	path: "/dashboard",
+    // 	element: <Dashboard />,
+    // 	loader: dashboardLoader,
+    //   },
+    //   {
+    // 	path: "/transactions",
+    // 	element: <Transactions />,
+    // 	loader: transactionLoader,
+    //   },
+    //   {
+    // 	path: "/account",
+    // 	element: <Account />,
+    // 	loader: accountLoader,
+    //   },
+    //   {
+    // 	path: "/wallet",
+    // 	element: <Wallet />,
+    //   },
+    // ],
+  },
+]);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<RootLayout>
-			<RouterProvider router={router} />
-		</RootLayout>
-	</React.StrictMode>
-)
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <RootLayout>
+      <RouterProvider router={router} />
+      {/* <Toaster /> */}
+    </RootLayout>
+  </React.StrictMode>
+);
