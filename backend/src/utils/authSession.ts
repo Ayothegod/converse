@@ -69,14 +69,36 @@ export async function invalidateSession(sessionId: string): Promise<void> {
   await prisma.session.delete({ where: { id: sessionId } });
 }
 
-export function setSessionTokenCookie(res: Response, token: string) {
-  res.cookie("sessionToken", token, {
-    httpOnly: true,
-    secure: false, // Ensures it's sent only over HTTPS(true)
-    sameSite: "lax",
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days lifetime
-		path:"/"
-  });
+export function setSessionTokenCookie(res: Response, token: string): void {
+  if (process.env.NODE_ENV === "production") {
+    res.cookie("authSession", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 30 days lifetime
+      path: "/",
+    });
+  } else {
+    res.cookie("authSession", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 30 days lifetime
+      path: "/",
+    });
+  }
+}
+
+export function deleteSessionTokenCookie(res: Response): void {
+  if (process.env.NODE_ENV === "production") {
+    res.clearCookie("authSession", {
+      maxAge: 0,
+    });
+  } else {
+    res.clearCookie("authSession", {
+      maxAge: 0,
+    });
+  }
 }
 
 export type SessionValidationResult =

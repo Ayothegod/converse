@@ -3,6 +3,7 @@ import express from "express";
 import { rateLimit } from "express-rate-limit";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import cookieParser from "cookie-parser";
 
 import dotenv from "dotenv";
 import { ApiError } from "./utils/ApiError";
@@ -14,6 +15,8 @@ dotenv.config({
 
 const app = express();
 app.use(express.json({ limit: "16kb" }));
+// app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 const httpServer = createServer(app);
 import { initializeSocketIO } from "./utils/socket";
@@ -68,17 +71,20 @@ app.use(morganMiddleware);
 //     console.log(`hello from client: ${socket.id}`);
 //     io.emit("message", new Date().toISOString());
 //   });
-  
+
 //   socket.on("disconnect", () => {
 //     console.log(`disconnect: ${socket.id}`);
 //   });
 // });
 
 // Routes imports
+import { errorHandler } from "./middlewares/error.middleware";
+
 import defaultRoute from "./routes/default.route.js";
-import authRoute from "./routes/auth.route.js"
+import authRoute from "./routes/auth.route.js";
 
 // ROUTES
+
 app.use("/default", defaultRoute);
 app.use("/api/v1/auth", authRoute);
 
@@ -93,4 +99,5 @@ const startServer = () => {
   });
 };
 
+app.use(errorHandler as any);
 startServer();

@@ -2,8 +2,12 @@ import { Request, Router, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { prisma } from "../utils/client.js";
-import { createSession, generateSessionToken, setSessionTokenCookie } from "../utils/authSession.js";
-import { hashPassword } from "../utils/services.js";
+import {
+  createSession,
+  generateSessionToken,
+  setSessionTokenCookie,
+} from "../utils/authSession.js";
+import { comparePassword, hashPassword } from "../utils/services.js";
 
 const registerController = asyncHandler(async (req: Request, res: Response) => {
   const { email, username, password, fullname } = req.body;
@@ -30,7 +34,7 @@ const registerController = asyncHandler(async (req: Request, res: Response) => {
       );
   }
 
-  const hashedPassword = await hashPassword(password)
+  const hashedPassword = await hashPassword(password);
 
   const user = await prisma.user.create({
     data: {
@@ -47,11 +51,58 @@ const registerController = asyncHandler(async (req: Request, res: Response) => {
   const session = await createSession(token, user.id);
 
   console.log(token, session);
-  setSessionTokenCookie(res, token); 
+  setSessionTokenCookie(res, token);
 
   return res
     .status(200)
     .json(new ApiResponse(200, "OK", "User registered successfully"));
 });
 
-export { registerController };
+const loginController = asyncHandler(async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+
+  // Validate body data
+  console.log(password, username);
+
+  // chcek for user
+  const user = await prisma.user.findUnique({
+    where: { username: username },
+  });
+
+  if (!user) {
+    return res
+      .status(400)
+      .json(
+        new ApiResponse(400, null, "User not found, please signup instead.")
+      );
+  }
+
+  // Check password
+  const passwordCheck = await comparePassword(
+    password,
+    user.password as string
+  );
+  if (!passwordCheck) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, null, "Invalid credentials!"));
+  }
+
+  const token = generateSessionToken();
+  const session = await createSession(token, user.id);
+
+  console.log(token, session);
+  setSessionTokenCookie(res, token);
+
+  return res.status(200).json(new ApiResponse(200, "OK", "Login successful!"));
+});
+
+const forgetPasswordController = asyncHandler(
+  async (req: Request, res: Response) => {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, req.user, "Secret Info here!"));
+  }
+);
+
+export { registerController, loginController, forgetPasswordController };

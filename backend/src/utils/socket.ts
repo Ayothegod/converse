@@ -38,22 +38,34 @@ class MyCustomError extends Error {
 const initializeSocketIO = (io: Server) => {
   return io.on("connection", async (socket) => {
     try {
-      const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
+      console.log("Start connection");
 
-      let token = cookies?.accessToken;
+      // const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
 
-      if (!token) {
-        token = socket.handshake.auth?.token;
-      }
+      // let token = cookies?.accessToken;
 
-      if (!token) {
-        throw new ApiError(401, "Un-authorized handshake. Token is missing");
-      }
+      // if (!token) {
+      //   token = socket.handshake.auth?.token;
+      // }
 
-      const decodedToken = jwt.verify(
-        token,
-        process.env.ACCESS_TOKEN_SECRET as string
-      ); 
+      // if (!token) {
+      //   throw new ApiError(401, "Un-authorized handshake. Token is missing");
+      // }
+
+      // TODO: test example 
+      // socket.on("hello!", () => {
+      //   console.log(`hello from client: ${socket.}`);
+      //   socket.emit("message", "Whats supp client!");
+      // });
+
+      // const decodedToken = jwt.verify(
+      //   token,
+      //   process.env.ACCESS_TOKEN_SECRET as string
+      // );
+
+      // console.log(decodedToken);
+
+      console.log("Connect id here: ", socket.id);
 
       // const user = await User.findById(decodedToken?._id).select(
       //   "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
@@ -73,9 +85,9 @@ const initializeSocketIO = (io: Server) => {
       // console.log("User connected 🗼. userId: ", user._id.toString());
 
       // Common events that needs to be mounted on the initialization
-      mountJoinChatEvent(socket);
-      mountParticipantTypingEvent(socket);
-      mountParticipantStoppedTypingEvent(socket);
+      // mountJoinChatEvent(socket);
+      // mountParticipantTypingEvent(socket);
+      // mountParticipantStoppedTypingEvent(socket);
 
       // socket.on(ChatEventEnum.DISCONNECT_EVENT, () => {
       //   console.log("user has disconnected 🚫. userId: " + socket.user?._id);
