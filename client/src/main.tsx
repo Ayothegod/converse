@@ -10,9 +10,7 @@ import LearnSwr, {
   Loader as swrLoader,
 } from "./routes/learn.tsx";
 import { ThemeProvider } from "./lib/hook/theme.tsx";
-
-// NOTE: make sure to add errorBoundary to all routes that throw error from loader and actions
-// Add shadcn toast
+import Chat from "./routes/chat.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +24,11 @@ const router = createBrowserRouter([
     element: <LearnSwr />,
     errorElement: <ErrorBoundary />,
     loader: swrLoader,
+  },
+  {
+    path: "/chat",
+    element: <Chat />,
+    errorElement: <ErrorBoundary />,
   },
   // {
   // 	path: "/register",
@@ -64,6 +67,8 @@ const router = createBrowserRouter([
     // ],
   },
 ]);
+
+// console.log("Hello");
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
