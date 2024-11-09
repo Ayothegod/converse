@@ -7,6 +7,7 @@ import LearnSwr, {
 } from "./routes/learn.tsx";
 import Chat from "./routes/chat.tsx";
 import Register from "./routes/register.tsx";
+import Login from "./routes/login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -31,12 +32,11 @@ const router = createBrowserRouter([
     element: <Register />,
     errorElement: <RootError />,
   },
-  //   {
-  // 	path: "/login",
-  // 	element: <Login />,
-  // 	loader: loginLoader,
-  // 	errorElement: <ErrorBoundary />,
-  //   },
+  {
+    path: "/login",
+    element: <Login />,
+    errorElement: <RootError />,
+  },
   {
     element: <MainLayout />,
     // errorElement: <MainLayoutError />,
