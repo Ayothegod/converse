@@ -8,12 +8,13 @@ import {
   setSessionTokenCookie,
 } from "../utils/authSession.js";
 import { comparePassword, hashPassword } from "../utils/services.js";
+import { AuthErrorEnum } from "../utils/constants.js";
 
 const registerController = asyncHandler(async (req: Request, res: Response) => {
   const { email, username, password, fullname } = req.body;
 
   // Validate body data
-  console.log(email, username);
+  // console.log(email, username, password, fullname);
 
   const existingUser = await prisma.user.findFirst({
     where: {
@@ -28,7 +29,7 @@ const registerController = asyncHandler(async (req: Request, res: Response) => {
       .json(
         new ApiResponse(
           400,
-          null,
+          AuthErrorEnum.ALREADY_EXISTS,
           "User already exists with this email or username"
         )
       );
@@ -50,7 +51,7 @@ const registerController = asyncHandler(async (req: Request, res: Response) => {
   const token = generateSessionToken();
   const session = await createSession(token, user.id);
 
-  console.log(token, session);
+  // console.log(token, session);
   setSessionTokenCookie(res, token);
 
   return res
@@ -73,7 +74,11 @@ const loginController = asyncHandler(async (req: Request, res: Response) => {
     return res
       .status(400)
       .json(
-        new ApiResponse(400, null, "User not found, please signup instead.")
+        new ApiResponse(
+          400,
+          AuthErrorEnum.USER_NOT_FOUND,
+          "User not found, please signup instead."
+        )
       );
   }
 
@@ -85,7 +90,7 @@ const loginController = asyncHandler(async (req: Request, res: Response) => {
   if (!passwordCheck) {
     return res
       .status(400)
-      .json(new ApiResponse(400, null, "Invalid credentials!"));
+      .json(new ApiResponse(400, AuthErrorEnum.INVALID_CREDENTIALS, "Invalid credentials!"));
   }
 
   const token = generateSessionToken();

@@ -703,3 +703,43 @@
 [08 Nov, 2024 - 22:43:26:4326] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
 [08 Nov, 2024 - 22:43:43:4343] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
 [08 Nov, 2024 - 22:43:43:4343] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:30:14:3014] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:30:14:3014] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:31:27:3127] [31merror[39m: [31mcrypto is not defined[39m
+[09 Nov, 2024 - 13:31:27:3127] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/register 500 - 592.552 ms[39m
+[09 Nov, 2024 - 13:35:26:3526] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:35:26:3526] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:35:32:3532] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/register 200 - 531.739 ms[39m
+[09 Nov, 2024 - 13:36:20:3620] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/register 400 - 8.326 ms[39m
+[09 Nov, 2024 - 13:39:03:393] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/register 400 - 3.886 ms[39m
+[09 Nov, 2024 - 13:43:50:4350] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/register 400 - 4.552 ms[39m
+[09 Nov, 2024 - 13:44:14:4414] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/register 200 - 511.650 ms[39m
+[09 Nov, 2024 - 13:44:53:4453] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:44:53:4453] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:44:58:4458] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:44:58:4458] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:47:33:4733] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:47:33:4733] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:47:53:4753] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:47:53:4753] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:48:00:480] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:48:00:480] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:48:07:487] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:48:07:487] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:48:18:4818] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:48:18:4818] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:48:25:4825] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:48:25:4825] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:48:27:4827] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:48:27:4827] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:48:42:4842] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:48:42:4842] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:48:44:4844] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:48:44:4844] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:48:49:4849] [34minfo[39m: [34m📑 Visit the documentation at: http://localhost:8080[39m
+[09 Nov, 2024 - 13:48:49:4849] [34minfo[39m: [34m⚙️  Server is running on port: 8080[39m
+[09 Nov, 2024 - 13:57:20:5720] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/login 400 - 22.278 ms[39m
+[09 Nov, 2024 - 13:57:42:5742] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/login 400 - 201.438 ms[39m
+[09 Nov, 2024 - 13:58:17:5817] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/login 400 - 243.006 ms[39m
+[09 Nov, 2024 - 13:58:25:5825] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/login 200 - 368.046 ms[39m
+[09 Nov, 2024 - 13:59:33:5933] [35mhttp[39m: [35m::ffff:127.0.0.1 POST /api/v1/auth/login 200 - 437.333 ms[39m

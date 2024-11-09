@@ -3,6 +3,7 @@ import {
   encodeHexLowerCase,
 } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
+import crypto from "crypto";
 
 import type { User, Session } from "@prisma/client";
 import { prisma } from "./client";
