@@ -8,27 +8,14 @@ import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "@/lib/fetch";
 import { registerSchema } from "@/lib/schema";
-// import { useProcessStore } from "@/lib/store/stateStore";
-// import axios from "axios";
 import { Loader2 } from "lucide-react";
-// import logo from "@/assets/tranzact.svg"
 import { useToast } from "@/hooks/use-toast";
 import Logo from "@/components/build/Logo";
 import { useState } from "react";
 
 type RegisterSchemaType = z.infer<typeof registerSchema>;
 
-// export async function Loader() {
-//   const user = Cookies.get("user_access");
-//   if (user) {
-//     return redirect("/dashboard");
-//   }
-
-//   return json(null);
-// }
-
 export default function Register() {
-  // const { process, setProcess } = useProcessStore();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -43,45 +30,36 @@ export default function Register() {
 
     try {
       const response = await axiosInstance.post(`/auth/register`, {
-        name: data.fullname,
+        fullname: data.fullname,
         email: data.email,
         username: data.username,
         password: data.password,
       });
-
-      console.log(response);
-      console.log(response.data);
-
-      // if (response.data.error) {
-      //   toast({
-      //     variant: "destructive",
-      //     description: `User with this email already exists!`,
-      //   });
-      //   return null;
-      // }
+      // console.log(response.data);
 
       toast({
-        title: `Welcome to Tranzact, ${data.username}`,
-        description: `Login to continue to Tranzact`,
+        title: `${response.data ? response.data.message : "Success"}`,
+        description: `welcome to converse, ${data.username}`,
       });
-      // return navigate("/login");
-    } catch (error: any) {
-      console.log(error);
 
-      // if (error.request) {
-      //   toast({
-      //     variant: "destructive",
-      //     title: "Uh oh! Something went wrong.",
-      //     description: "There was a problem with your request.",
-      //   });
-      //   return null;
-      // } else {
-      //   toast({
-      //     variant: "destructive",
-      //     description: "Something went wrong, try again later!",
-      //   });
-      //   return null;
-      // }
+      return navigate("/login");
+    } catch (error: any) {
+      // console.log(error.response.data);
+
+      if (error.request) {
+        toast({
+          variant: "destructive",
+          title: "Error!",
+          description: `${error.response.data.message}`,
+        });
+        return null;
+      } else {
+        toast({
+          variant: "destructive",
+          description: "Something went wrong, try again later!",
+        });
+        return null;
+      }
     } finally {
       setLoading(false);
     }
