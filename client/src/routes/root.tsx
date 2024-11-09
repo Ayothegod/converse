@@ -1,55 +1,68 @@
-import ThemeToggle from '@/components/build/ThemeToggle'
-import { Button } from '@/components/ui/button'
-import { useState } from 'react'
-import { Link, useRouteError } from 'react-router-dom'
+import ThemeToggle from "@/components/build/ThemeToggle";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { Link, useRouteError } from "react-router-dom";
 
 export default function Root() {
-	const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const { toast } = useToast();
 
-	return (
-		<div>
-			<main className="flex items-center justify-center my-20 flex-col gap-4">
-				<h1 className="text-4xl font-bold">
-					Welcome to React.js and Hono.dev Starter!
-				</h1>
-				<p className="">
-					Get started by editing <code className="">Routes/Root.js</code>
-				</p>
-				<Button onClick={() => setCount(count + 1)}>Count: {count}</Button>
+  return (
+    <div>
+      <main className="flex items-center justify-center my-20 flex-col gap-4">
+        <Button
+          onClick={() => {
+            toast({
+              title: "Scheduled: Catch up",
+              description: "Friday, February 10, 2023 at 5:57 PM",
+            });
+          }}
+        >
+          Show Toast
+        </Button>
 
-				<p>To get started on data fetching and mutation, head to: </p>
-				<Link to="/learnswr" className="underline">
-					Data Mutation
-				</Link>
+        <h1 className="text-4xl font-bold">
+          Welcome to React.js and Hono.dev Starter!
+        </h1>
+        <p className="">
+          Get started by editing <code className="">Routes/Root.js</code>
+        </p>
+        <Button onClick={() => setCount(count + 1)}>Count: {count}</Button>
 
-				<ThemeToggle/>
-			</main>
-		</div>
-	)
+        <p>To get started on data fetching and mutation, head to: </p>
+        <Link to="/learnswr" className="underline">
+          Data Mutation
+        </Link>
+
+        <ThemeToggle />
+      </main>
+    </div>
+  );
 }
 
 export async function Loader() {
-	return null
+  return null;
 }
 
 export function RootError() {
-	let error = useRouteError()
-	console.error(error)
-	return (
-		<div className="grid h-screen place-content-center bg-white px-4">
-			<div className="text-center">
-				<h1 className="text-9xl font-black text-gray-200">404</h1>
+  const error = useRouteError();
+  console.error(error);
+  return (
+    <div className="grid h-screen place-content-center bg-white px-4">
+      <div className="text-center">
+        <h1 className="text-9xl font-black text-gray-200">404</h1>
 
-				<p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-					Uh-oh!
-				</p>
+        <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Uh-oh!
+        </p>
 
-				<p className="mt-4 text-gray-500">We can't find this page.</p>
+        <p className="mt-4 text-gray-500">We can't find this page.</p>
 
-				<Link to="/">
-					<Button className="mt-6">Go Back Home</Button>
-				</Link>
-			</div>
-		</div>
-	)
+        <Link to="/">
+          <Button className="mt-6">Go Back Home</Button>
+        </Link>
+      </div>
+    </div>
+  );
 }
