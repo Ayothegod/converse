@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ThemeToggle from "@/components/build/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -46,10 +47,11 @@ export async function Loader() {
 }
 
 export function RootError() {
-  const error = useRouteError();
-  console.error(error);
+  const error: any = useRouteError();
+  // console.error(error);
+
   return (
-    <div className="grid h-screen place-content-center bg-white px-4">
+    <div className="grid h-screen place-content-center bg-white dark:bg-black px-4">
       <div className="text-center">
         <h1 className="text-9xl font-black text-gray-200">404</h1>
 
@@ -57,7 +59,9 @@ export function RootError() {
           Uh-oh!
         </p>
 
-        <p className="mt-4 text-gray-500">We can't find this page.</p>
+        <p className="mt-4 text-gray-500">
+          {error?.data ? error.data : " We can't find this page."}
+        </p>
 
         <Link to="/">
           <Button className="mt-6">Go Back Home</Button>

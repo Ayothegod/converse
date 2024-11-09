@@ -2,10 +2,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout.tsx";
 import Root, { RootError, Loader as rootLoader } from "./routes/root.tsx";
 import LearnSwr, {
-  ErrorBoundary,
+  // ErrorBoundary,
   Loader as swrLoader,
 } from "./routes/learn.tsx";
 import Chat from "./routes/chat.tsx";
+import Register from "./routes/register.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,19 +18,19 @@ const router = createBrowserRouter([
   {
     path: "/learnswr",
     element: <LearnSwr />,
-    errorElement: <ErrorBoundary />,
+    errorElement: <RootError />,
     loader: swrLoader,
   },
   {
     path: "/chat",
     element: <Chat />,
-    errorElement: <ErrorBoundary />,
+    errorElement: <RootError />,
   },
-  // {
-  // 	path: "/register",
-  // 	element: <Register />,
-  // 	errorElement: <ErrorBoundary />,
-  //   },
+  {
+    path: "/register",
+    element: <Register />,
+    errorElement: <RootError />,
+  },
   //   {
   // 	path: "/login",
   // 	element: <Login />,
