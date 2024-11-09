@@ -26,3 +26,9 @@ export const verifyCookie = asyncHandler(
     }
   }
 );
+
+// TODO: test example
+// socket.on("hello!", () => {
+//   console.log(`hello from client: ${socket.}`);
+//   socket.emit("message", "Whats supp client!");
+// });

@@ -5,6 +5,7 @@ ChatEventEnum;
 import { ApiError } from "../utils/ApiError.js";
 import { ChatEventEnum } from "./constants.js";
 import { Request } from "express";
+import { validateSessionToken } from "./authSession.js";
 
 const mountJoinChatEvent = (socket: Socket) => {
   socket.on(ChatEventEnum.JOIN_CHAT_EVENT, (chatId) => {
@@ -40,42 +41,29 @@ const initializeSocketIO = (io: Server) => {
     try {
       console.log("Start connection");
 
-      // const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
+      const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
 
-      // let token = cookies?.accessToken;
+      let token = cookies?.authSession;
+      console.log("token", token);
 
-      // if (!token) {
-      //   token = socket.handshake.auth?.token;
-      // }
+      if (!token) {
+        console.error("Error 1");
+        token = socket.handshake.auth?.token;
+      }
 
-      // if (!token) {
-      //   throw new ApiError(401, "Un-authorized handshake. Token is missing");
-      // }
-
-      // TODO: test example 
-      // socket.on("hello!", () => {
-      //   console.log(`hello from client: ${socket.}`);
-      //   socket.emit("message", "Whats supp client!");
-      // });
-
-      // const decodedToken = jwt.verify(
-      //   token,
-      //   process.env.ACCESS_TOKEN_SECRET as string
-      // );
-
-      // console.log(decodedToken);
+      if (!token) {
+        console.error("Error 2");
+        throw new ApiError(401, "Un-authorized handshake. Token is missing");
+      }
 
       console.log("Connect id here: ", socket.id);
 
-      // const user = await User.findById(decodedToken?._id).select(
-      //   "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
-      // );
+      const validateToken = await validateSessionToken(token);
+      if (!validateToken.session || !validateToken.user) {
+        throw new ApiError(401, "Invalid access token");
+      }
 
-      // // retrieve the user
-      // if (!user) {
-      //   throw new ApiError(401, "Un-authorized handshake. Token is invalid");
-      // }
-      socket.user = "Hello boss"; // mount te user object to the socket
+      socket.user = validateToken.user;
 
       // We are creating a room with user id so that if user is joined but does not have any active chat going on.
       // still we want to emit some socket events to the user.
@@ -114,14 +102,6 @@ const initializeSocketIO = (io: Server) => {
   });
 };
 
-/**
- *
- * @param {import("express").Request} req - Request object to access the `io` instance set at the entry point
- * @param {string} roomId - Room where the event should be emitted
- * @param {AvailableChatEvents[0]} event - Event that should be emitted
- * @param {any} payload - Data that should be sent when emitting the event
- * @description Utility function responsible to abstract the logic of socket emission via the io instance
- */
 const emitSocketEvent = (
   req: Request,
   roomId: string,
