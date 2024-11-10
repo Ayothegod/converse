@@ -23,6 +23,8 @@ export default function Root() {
           Show Toast
         </Button>
 
+        <p className="text-primary">Hello Primary</p>
+
         <h1 className="text-4xl font-bold">
           Welcome to React.js and Hono.dev Starter!
         </h1>
