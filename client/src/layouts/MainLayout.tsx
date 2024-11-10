@@ -9,9 +9,11 @@ export default function MainLayout() {
   const path = location.pathname;
 
   return (
+    <>
+   
     <div className="">
       <section className="max-w-5xl mx-auto flex px-2">
-        {/* DESKTOP-SIDEBAR */}
+ 
         <div className="hidden md:flex md:w-[280px] flex-shrink-0">
           <div className="w-full h-screen py-4 space-y-4">
             <div className="flex items-center gap-4 text-2xl font-bold">
@@ -41,13 +43,13 @@ export default function MainLayout() {
         </div>
 
         <div className="w-full flex-grow">
-          {/* <TopBar/> */}
           <Outlet />
         </div>
 
-        {/* MOBILE-MENU  */}
         <div className="hidden md:">Sidebar</div>
       </section>
     </div>
+    
+     </>
   );
 }
