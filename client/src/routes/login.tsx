@@ -33,7 +33,7 @@ export default function Login() {
         username: data.username,
         password: data.password,
       });
-      console.log(response.data);
+      // console.log(response.data);
 
       toast({
         title: `${response.data ? response.data.message : "Success"}`,
@@ -42,7 +42,7 @@ export default function Login() {
 
       return navigate("/chat");
     } catch (error: any) {
-      console.log(error.response.data);
+      // console.log(error.response.data);
 
       if (error.request) {
         toast({
