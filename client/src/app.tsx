@@ -8,6 +8,7 @@ import LearnSwr, {
 import Chat from "./routes/chat.tsx";
 import Register from "./routes/register.tsx";
 import Login from "./routes/login.tsx";
+import Home from "./routes/home.tsx";
 
 const router = createBrowserRouter([
   {
@@ -39,14 +40,14 @@ const router = createBrowserRouter([
   },
   {
     element: <MainLayout />,
+    errorElement: <RootError />,
     // errorElement: <MainLayoutError />,
-    // children: [
-    //   {
-    // 	path: "/dashboard",
-    // 	element: <Dashboard />,
-    // 	loader: dashboardLoader,
-    //   },
-    // ],
+    children: [
+      {
+        path: "/home",
+        element: <Home />,
+      },
+    ],
   },
 ]);
 

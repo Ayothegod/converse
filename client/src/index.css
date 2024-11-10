@@ -86,13 +86,13 @@
     --input: #262626;
     --ring: #d3d3d3;
 
-    --sidebar-background: #1a1a1a;
-    --sidebar-foreground: #f4f4f4;
+    --sidebar-background: #242731;
+    --sidebar-foreground: #888888;
     --sidebar-primary: #4e8cc6;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #262626;
     --sidebar-accent-foreground: #f4f4f4;
-    --sidebar-border: #262626;
+    --sidebar-border: #343333;
     --sidebar-ring: #3b82f6;
   }
 }

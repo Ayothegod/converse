@@ -22,7 +22,7 @@ const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [socket, setSocket] = useState<ReturnType<typeof socketio> | null>(
     null
   );
-  console.log(socket);
+  // console.log(socket);
 
   useEffect(() => {
     setSocket(getSocket());
