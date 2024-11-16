@@ -8,18 +8,80 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  sessions Session[]
-  username String    @unique
-  email    String    @unique
-  password String?
-  fullname String?
+  id                  String         @id @default(uuid())
+  username            String         @unique
+  email               String         @unique
+  password            String
+  fullname            String?
+  createdAt           DateTime       @default(now())
+  avatar              Avatar?
+  avatarId            String?
+  chats               Chat[]         @relation("ChatSessions")
+  messages            Message[]
+  notifications       Notification[]
+  sessions            Session[]
+  outgoingConnections Connection[]   @relation("RequestingConnections")
+
+  incomingConnections Connection[] @relation("AcceptingConnections")
 }
 
 model Session {
   id        String   @id
   userId    String
   expiresAt DateTime
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
 
-  user User @relation(references: [id], fields: [userId], onDelete: Cascade)
+model Chat {
+  id           String    @id @default(uuid())
+  status       String // e.g., "ongoing", "finished", "started"
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  participants User[]    @relation("ChatSessions")
+  name         String
+  isGroupGame  Boolean   @default(true)
+  messages     Message[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  chatId    String?
+  chat      Chat?    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sentiment String // e.g., "positive", "neutral", "negative"
+}
+
+model Avatar {
+  id          String   @id @default(uuid())
+  description String // Text input from the user
+  imageURL    String
+  createdAt   DateTime @default(now())
+  ownerId     String   @unique
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+model Connection {
+  id          String   @id @default(uuid())
+  requesterId String
+  requester   User     @relation("RequestingConnections", fields: [requesterId], references: [id], onDelete: Cascade)
+  accepterId  String
+  accepter    User     @relation("AcceptingConnections", fields: [accepterId], references: [id], onDelete: Cascade)
+  status      String // e.g., "pending", "accepted", "declined"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  content     String
+  type        String // e.g., "friend_request", "game_invite"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  recipientId String
+  recipient   User     @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  read        Boolean  @default(false)
 }
