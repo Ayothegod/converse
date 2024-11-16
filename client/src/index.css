@@ -54,10 +54,10 @@
 
   .dark {
     --background: #1f2128;
-    --foreground: #fafafa;
+    --foreground: #888888;
 
     --background-top: #242731;
-    --foreground-top: #888888;
+    --foreground-top: #fafafa;
 
     --card: #0a0a0a;
     --card-foreground: #fafafa;

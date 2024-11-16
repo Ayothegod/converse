@@ -89,7 +89,7 @@ export default function MainSidebar() {
   } = useSidebar();
 
   return (
-    <div className="hidden md:flex">
+    <div className="hidden lg:flex">
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <SidebarMenu>
@@ -112,12 +112,11 @@ export default function MainSidebar() {
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      className="w-full"
-                      variant={path === item.url ? "outline" : "default"}
+                      variant={path === item.url ? "outline" : "default"} asChild
                     >
                       <a
                         href={item.url}
-                        className={` flex items-center gap-2 ${path === item.url && "text-foreground"}`}
+                        className={`${path === item.url && "text-foreground"}`}
                       >
                         <item.icon className="h-4 w-4" />
                         <span className="text-base">{item.title}</span>
@@ -137,12 +136,11 @@ export default function MainSidebar() {
             {footerItems.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
-                  className="w-full"
-                  variant={path === item.url ? "outline" : "default"}
+                  variant={path === item.url ? "outline" : "default"} asChild
                 >
                   <a
                     href={item.url}
-                    className={` flex items-center gap-2 ${path === item.url && "text-foreground"}`}
+                    className={`${path === item.url && "text-foreground"}`}
                   >
                     <item.icon className="h-4 w-4" />
                     <span className="text-base">{item.title}</span>
