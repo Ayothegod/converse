@@ -32,6 +32,7 @@ model Session {
   user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
+// set admin status for chat
 model Chat {
   id           String    @id @default(uuid())
   status       String // e.g., "ongoing", "finished", "started"

@@ -12,6 +12,7 @@ import { emitSocketEvent } from "../utils/socket.js";
 // if accepted () => start chatting
 // if !user or !ourFriend () => invite user
 
+// DONE:
 const searchAvailableUsers = asyncHandler(
   async (req: Request, res: Response) => {
     const users = await prisma.user.findMany({
@@ -43,7 +44,7 @@ const searchAvailableUsers = asyncHandler(
   }
 );
 
-// TODO: closed route
+// DONE: closed route
 const createOrGetAOneOnOneChat = asyncHandler(
   async (req: Request, res: Response) => {
     const { receiverId } = req.params;
@@ -63,17 +64,17 @@ const createOrGetAOneOnOneChat = asyncHandler(
     }
 
     // Because of our multi chat system schema, we can't get sinle message between 2 users, so we get all messages they both feature in
-    const gameChat = await prisma.gameSession.findMany({
+    const chat = await prisma.chat.findMany({
       where: {
         isGroupGame: false,
-        players: {
+        participants: {
           some: {
             id: req.user?.id,
           },
         },
         AND: [
           {
-            players: {
+            participants: {
               some: {
                 id: receiverId,
               },
@@ -90,40 +91,37 @@ const createOrGetAOneOnOneChat = asyncHandler(
       },
     });
 
-    if (gameChat.length) {
+    if (chat.length) {
       // if we find the chat that means user already has created a chat
       return res
         .status(200)
-        .json(new ApiResponse(200, gameChat, "Chat retrieved successfully"));
+        .json(new ApiResponse(200, chat, "Chat retrieved successfully"));
     }
 
-    const newGameChatInstance = await prisma.gameSession.create({
+    const newChatInstance = await prisma.chat.create({
       data: {
         name: "One on one chat",
         status: "started",
         isGroupGame: false,
-        players: {
+        participants: {
           connect: [{ id: req.user?.id }, { id: receiverId }],
         },
-        gameType: "chat",
-        rounds: 0,
       },
       include: {
-        players: true, // Include the players relation in the result
+        participants: true, // Include the players relation in the result
       },
     });
 
-    if (!newGameChatInstance) {
+    if (!newChatInstance) {
       throw new ApiError(404, "Error while creating group chat.");
     }
 
-    const gameSession = await prisma.gameSession.findUnique({
+    const chatSession = await prisma.chat.findUnique({
       where: {
-        id: newGameChatInstance.id,
+        id: newChatInstance.id,
       },
       include: {
-        players: {
-          // Participants in the session
+        participants: {
           select: {
             id: true,
             username: true,
@@ -151,29 +149,30 @@ const createOrGetAOneOnOneChat = asyncHandler(
       },
     });
 
-    if (!gameSession) {
+    if (!chatSession) {
       throw new ApiError(500, "Internal server error");
     }
 
-    newGameChatInstance.players.forEach((player) => {
+    newChatInstance.participants.forEach((participant) => {
       // if (player.id.toString() === req.user?.id.toString()) return;
       // don't emit the event for the logged in use as he is the one who is initiating the chat
 
       // emit event to other participants with new chat as a payload
       emitSocketEvent(
         req,
-        player.id?.toString(),
+        participant.id?.toString(),
         ChatEventEnum.NEW_CHAT_EVENT,
-        gameSession
+        chatSession
       );
     });
 
     return res
       .status(201)
-      .json(new ApiResponse(201, gameSession, "Chat retrieved successfully"));
+      .json(new ApiResponse(201, chatSession, "Chat retrieved successfully"));
   }
 );
 
+// DONE:
 const createAGroupChat = asyncHandler(async (req: Request, res: Response) => {
   const { name, participants } = req.body;
 
@@ -184,40 +183,38 @@ const createAGroupChat = asyncHandler(async (req: Request, res: Response) => {
     );
   }
 
-  const members = [...new Set([...participants, req.user?.id])]; // check for duplicate
+  const members = [...new Set([...participants, req.user?.id])];
 
   if (members.length < 3) {
     // We want group chat to have minimum 3 members including admin
     throw new ApiError(400, "Group chat must have a minimum of 3 members.");
   }
 
-  const newGameChatInstance = await prisma.gameSession.create({
+  const newChatInstance = await prisma.chat.create({
     data: {
       name: name,
       status: "started",
-      players: {
+      participants: {
         connect: members.map((participant: string) => ({
           id: participant,
         })),
       },
-      gameType: "game",
-      rounds: 0,
     },
     include: {
-      players: true,
+      participants: true,
     },
   });
 
-  if (!newGameChatInstance) {
+  if (!newChatInstance) {
     throw new ApiError(404, "Error while creating group chat.");
   }
 
-  const gameSession = await prisma.gameSession.findUnique({
+  const chatSession = await prisma.chat.findUnique({
     where: {
-      id: newGameChatInstance.id,
+      id: newChatInstance.id,
     },
     include: {
-      players: {
+      participants: {
         select: {
           id: true,
           username: true,
@@ -244,37 +241,38 @@ const createAGroupChat = asyncHandler(async (req: Request, res: Response) => {
     },
   });
 
-  if (!gameSession) {
+  if (!chatSession) {
     throw new ApiError(500, "Internal server error");
   }
 
-  newGameChatInstance.players.forEach((player) => {
+  newChatInstance.participants.forEach((participant) => {
     // if (player.id.toString() === req.user?.id.toString()) return;
 
     // emit event to other participants with new chat as a payload
     emitSocketEvent(
       req,
-      player.id?.toString(),
+      participant.id?.toString(),
       ChatEventEnum.NEW_CHAT_EVENT,
-      gameSession
+      chatSession
     );
   });
 
   return res
     .status(200)
-    .json(new ApiResponse(201, gameSession, "Group chat created successfully"));
+    .json(new ApiResponse(201, chatSession, "Group chat created successfully"));
 });
 
+// DONE:
 const getGroupChatDetails = asyncHandler(
   async (req: Request, res: Response) => {
     const { chatId } = req.params;
 
-    const gameSession = await prisma.gameSession.findUnique({
+    const chat = await prisma.chat.findUnique({
       where: {
         id: chatId,
       },
       include: {
-        players: {
+        participants: {
           // Participants in the session
           select: {
             id: true,
@@ -303,23 +301,22 @@ const getGroupChatDetails = asyncHandler(
       },
     });
 
-    if (!gameSession) {
+    if (!chat) {
       throw new ApiError(404, "Group chat does not exist");
     }
 
     return res
       .status(200)
-      .json(
-        new ApiResponse(200, gameSession, "Group chat fetched successfully")
-      );
+      .json(new ApiResponse(200, chat, "Group chat fetched successfully"));
   }
 );
 
+// DONE:
 const renameGroupChat = asyncHandler(async (req: Request, res: Response) => {
   const { chatId } = req.params;
   const { name } = req.body;
 
-  const groupChat = await prisma.gameSession.findUnique({
+  const groupChat = await prisma.chat.findUnique({
     where: {
       id: chatId,
       isGroupGame: true,
@@ -335,7 +332,7 @@ const renameGroupChat = asyncHandler(async (req: Request, res: Response) => {
   //   throw new ApiError(404, "You are not an admin");
   // }
 
-  const updatedGroupChat = await prisma.gameSession.update({
+  const updatedGroupChat = await prisma.chat.update({
     where: {
       id: chatId,
     },
@@ -343,7 +340,7 @@ const renameGroupChat = asyncHandler(async (req: Request, res: Response) => {
       name: name,
     },
     include: {
-      players: {
+      participants: {
         select: {
           id: true,
           username: true,
@@ -375,13 +372,13 @@ const renameGroupChat = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(500, "Internal server error");
   }
 
-  updatedGroupChat.players.forEach((player) => {
+  updatedGroupChat.participants.forEach((participant) => {
     // if (player.id.toString() === req.user?.id.toString()) return;
 
     // emit event to other participants with new chat as a payload
     emitSocketEvent(
       req,
-      player.id?.toString(),
+      participant.id?.toString(),
       ChatEventEnum.UPDATE_GROUP_NAME_EVENT,
       updatedGroupChat
     );
@@ -398,11 +395,11 @@ const renameGroupChat = asyncHandler(async (req: Request, res: Response) => {
     );
 });
 
-// DANGER:
+// WARN: //DONE:
 const deleteGroupChat = asyncHandler(async (req: Request, res: Response) => {
   const { chatId } = req.params;
 
-  const groupChat = await prisma.gameSession.findUnique({
+  const groupChat = await prisma.chat.findUnique({
     where: {
       id: chatId,
       isGroupGame: true,
@@ -418,12 +415,12 @@ const deleteGroupChat = asyncHandler(async (req: Request, res: Response) => {
   //   throw new ApiError(404, "You are not an admin");
   // }
 
-  const deletedGroupChat = await prisma.gameSession.delete({
+  const deletedGroupChat = await prisma.chat.delete({
     where: {
       id: chatId,
     },
     include: {
-      players: {
+      participants: {
         select: {
           id: true,
           username: true,
@@ -438,13 +435,13 @@ const deleteGroupChat = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(500, "Internal server error");
   }
 
-  deletedGroupChat.players.forEach((player) => {
+  deletedGroupChat.participants.forEach((participant) => {
     // if (player.id.toString() === req.user?.id.toString()) return;
 
     // emit event to other participants with new chat as a payload
     emitSocketEvent(
       req,
-      player.id?.toString(),
+      participant.id?.toString(),
       ChatEventEnum.LEAVE_CHAT_EVENT,
       deletedGroupChat
     );
@@ -455,10 +452,11 @@ const deleteGroupChat = asyncHandler(async (req: Request, res: Response) => {
     .json(new ApiResponse(200, {}, "Group chat deleted successfully"));
 });
 
+// DONE:
 const deleteOneOnOneChat = asyncHandler(async (req: Request, res: Response) => {
   const { chatId } = req.params;
 
-  const chat = await prisma.gameSession.findUnique({
+  const chat = await prisma.chat.findUnique({
     where: {
       id: chatId,
       isGroupGame: false,
@@ -469,12 +467,12 @@ const deleteOneOnOneChat = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(404, "Chat does not exist");
   }
 
-  const deletedChat = await prisma.gameSession.delete({
+  const deletedChat = await prisma.chat.delete({
     where: {
       id: chatId,
     },
     include: {
-      players: {
+      participants: {
         select: {
           id: true,
           username: true,
@@ -489,13 +487,13 @@ const deleteOneOnOneChat = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(500, "Internal server error");
   }
 
-  deletedChat.players.forEach((player) => {
+  deletedChat.participants.forEach((participant) => {
     // if (player.id.toString() === req.user?.id.toString()) return;
 
     // emit event to other participants with new chat as a payload
     emitSocketEvent(
       req,
-      player.id?.toString(),
+      participant.id?.toString(),
       ChatEventEnum.LEAVE_CHAT_EVENT,
       deletedChat
     );
@@ -506,16 +504,17 @@ const deleteOneOnOneChat = asyncHandler(async (req: Request, res: Response) => {
     .json(new ApiResponse(200, {}, "Chat deleted successfully"));
 });
 
+// DONE:
 const leaveGroupChat = asyncHandler(async (req: Request, res: Response) => {
   const { chatId } = req.params;
 
-  const chat = await prisma.gameSession.findUnique({
+  const chat = await prisma.chat.findUnique({
     where: {
       id: chatId,
       isGroupGame: true,
     },
     include: {
-      players: {
+      participants: {
         select: {
           id: true,
         },
@@ -527,27 +526,27 @@ const leaveGroupChat = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(404, "Group chat does not exist");
   }
 
-  const notAParticipant = chat.players.filter(
-    (player) => player.id !== req.user?.id
+  const notAParticipant = chat.participants.filter(
+    (participant) => participant.id !== req.user?.id
   );
 
   if (notAParticipant) {
     throw new ApiError(400, "You are not a part of this group chat");
   }
 
-  const updatedChat = await prisma.gameSession.update({
+  const updatedChat = await prisma.chat.update({
     where: {
       id: chatId,
     },
     data: {
-      players: {
+      participants: {
         disconnect: {
           id: req.user?.id,
         },
       },
     },
     include: {
-      players: {
+      participants: {
         select: {
           id: true,
           username: true,
@@ -562,12 +561,12 @@ const leaveGroupChat = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(500, "Internal server error");
   }
 
-  updatedChat.players.forEach((player) => {
+  updatedChat.participants.forEach((participant) => {
     // if (player.id.toString() === req.user?.id.toString()) return;
 
     emitSocketEvent(
       req,
-      player.id?.toString(),
+      participant.id?.toString(),
       ChatEventEnum.LEAVE_CHAT_EVENT,
       updatedChat
     );
@@ -578,17 +577,18 @@ const leaveGroupChat = asyncHandler(async (req: Request, res: Response) => {
     .json(new ApiResponse(200, updatedChat, "Left a group successfully"));
 });
 
+// DONE:
 const addNewParticipantInGroupChat = asyncHandler(
   async (req: Request, res: Response) => {
     const { chatId, participantId } = req.params;
 
-    const chat = await prisma.gameSession.findUnique({
+    const chat = await prisma.chat.findUnique({
       where: {
         id: chatId,
         isGroupGame: true,
       },
       include: {
-        players: {
+        participants: {
           select: {
             id: true,
           },
@@ -605,27 +605,27 @@ const addNewParticipantInGroupChat = asyncHandler(
     //   throw new ApiError(404, "You are not an admin");
     // }
 
-    const alreadyAParticipant = chat.players.filter(
-      (player) => player.id === participantId
+    const alreadyAParticipant = chat.participants.filter(
+      (participant) => participant.id === participantId
     );
 
     if (alreadyAParticipant) {
       throw new ApiError(400, "Player already in a group chat");
     }
 
-    const updatedChat = await prisma.gameSession.update({
+    const updatedChat = await prisma.chat.update({
       where: {
         id: chatId,
       },
       data: {
-        players: {
+        participants: {
           connect: {
             id: participantId,
           },
         },
       },
       include: {
-        players: {
+        participants: {
           select: {
             id: true,
             username: true,
@@ -640,10 +640,10 @@ const addNewParticipantInGroupChat = asyncHandler(
       throw new ApiError(500, "Internal server error");
     }
 
-    updatedChat.players.forEach((player) => {
+    updatedChat.participants.forEach((participant) => {
       emitSocketEvent(
         req,
-        player.id?.toString(),
+        participant.id?.toString(),
         ChatEventEnum.JOIN_CHAT_EVENT,
         updatedChat
       );
@@ -655,17 +655,18 @@ const addNewParticipantInGroupChat = asyncHandler(
   }
 );
 
+// DONE:
 const removeParticipantFromGroupChat = asyncHandler(
   async (req: Request, res: Response) => {
     const { chatId, participantId } = req.params;
 
-    const chat = await prisma.gameSession.findUnique({
+    const chat = await prisma.chat.findUnique({
       where: {
         id: chatId,
         isGroupGame: true,
       },
       include: {
-        players: {
+        participants: {
           select: {
             id: true,
           },
@@ -682,27 +683,27 @@ const removeParticipantFromGroupChat = asyncHandler(
     //   throw new ApiError(404, "You are not an admin");
     // }
 
-    const notAParticipant = chat.players.filter(
-      (player) => player.id !== participantId
+    const notAParticipant = chat.participants.filter(
+      (participant) => participant.id !== participantId
     );
 
     if (notAParticipant) {
       throw new ApiError(400, "Player does not exist in the group chat");
     }
 
-    const updatedChat = await prisma.gameSession.update({
+    const updatedChat = await prisma.chat.update({
       where: {
         id: chatId,
       },
       data: {
-        players: {
+        participants: {
           disconnect: {
             id: participantId,
           },
         },
       },
       include: {
-        players: {
+        participants: {
           select: {
             id: true,
             username: true,
@@ -720,10 +721,10 @@ const removeParticipantFromGroupChat = asyncHandler(
     // emit leave chat event to the removed participant only
     // emitSocketEvent(req, participantId, ChatEventEnum.LEAVE_CHAT_EVENT, payload);
 
-    updatedChat.players.forEach((player) => {
+    updatedChat.participants.forEach((participant) => {
       emitSocketEvent(
         req,
-        player.id?.toString(),
+        participant.id?.toString(),
         ChatEventEnum.LEAVE_CHAT_EVENT,
         updatedChat
       );
@@ -735,19 +736,20 @@ const removeParticipantFromGroupChat = asyncHandler(
   }
 );
 
+// DONE:
 const getAllChats = asyncHandler(async (req: Request, res: Response) => {
   // get all chats that have logged in user as a participant
 
-  const chats = await prisma.gameSession.findMany({
+  const chats = await prisma.chat.findMany({
     where: {
-      players: {
+      participants: {
         some: {
           id: req.user?.id,
         },
       },
     },
     include: {
-      players: {
+      participants: {
         select: {
           id: true,
           avatarId: true,
