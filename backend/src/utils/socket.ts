@@ -64,25 +64,6 @@ const initializeSocketIO = (io: Server) => {
       socket.emit(ChatEventEnum.CONNECTED_EVENT, `${user.id.toString()}`);
       console.log("User connected 🗼. userId: ", user.id.toString());
 
-      // TODO: emit message
-      // socket.on("message", (data) => {
-      //   console.log(data);
-
-      //   // TODO: still needed since user may not be cconnected at all
-      //   // let user
-      //   // if(data.userSocket === socket.user?.id){
-      //   //   console.log("Yeah!!!");
-      //   // }
-      //   socket.to(data.chatId).emit("message", {
-      //     message: data.message,
-      //     user: socket.user?.username,
-      //   });
-      //   // socket.emit("message", {
-      //   //   message: data.message,
-      //   //   user: socket.user?.username,
-      //   // });
-      // });
-
       mountJoinChatEvent(socket);
       mountParticipantTypingEvent(socket);
       mountParticipantStoppedTypingEvent(socket);
@@ -118,6 +99,8 @@ const emitSocketEvent = (
   event: string,
   payload: any
 ) => {
+  console.log(`socket emitted from: roomID-${roomId}, with event: ${event}`);
+
   req.app.get("io").in(roomId).emit(event, payload);
 };
 

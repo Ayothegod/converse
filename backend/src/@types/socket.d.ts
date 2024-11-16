@@ -7,4 +7,3 @@ declare module "socket.io" {
   }
 }
 
-// { id: string; username: string; email: string; password: string | null; fullname: string | null; }

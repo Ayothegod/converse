@@ -64,29 +64,18 @@ app.use(
 app.use(morganMiddleware);
 initializeSocketIO(io);
 
-// io.on("connection", (socket) => {
-//   console.log(`connect: ${socket.id}`);
-
-//   socket.on("hello!", () => {
-//     console.log(`hello from client: ${socket.id}`);
-//     io.emit("message", new Date().toISOString());
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log(`disconnect: ${socket.id}`);
-//   });
-// });
-
 // Routes imports
 import { errorHandler } from "./middlewares/error.middleware";
 
 import defaultRoute from "./routes/default.route.js";
 import authRoute from "./routes/auth.route.js";
+import chatRoute from "./routes/chat.route.js";
 
 // ROUTES
 
 app.use("/default", defaultRoute);
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/chat", chatRoute);
 
 const startServer = () => {
   httpServer.listen(process.env.PORT || 8090, () => {
