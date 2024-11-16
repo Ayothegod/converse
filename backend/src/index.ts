@@ -62,7 +62,7 @@ app.use(
 // // Apply the rate limiting middleware to all requests
 // app.use(limiter);
 app.use(morganMiddleware);
-// initializeSocketIO(io);
+initializeSocketIO(io);
 
 // io.on("connection", (socket) => {
 //   console.log(`connect: ${socket.id}`);

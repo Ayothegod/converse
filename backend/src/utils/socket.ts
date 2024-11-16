@@ -39,50 +39,60 @@ class MyCustomError extends Error {
 const initializeSocketIO = (io: Server) => {
   return io.on("connection", async (socket) => {
     try {
-      console.log("Start connection");
-
       const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
-
       let token = cookies?.authSession;
-      console.log("token", token);
 
       if (!token) {
-        console.error("Error 1");
         token = socket.handshake.auth?.token;
       }
 
       if (!token) {
-        console.error("Error 2");
         throw new ApiError(401, "Un-authorized handshake. Token is missing");
       }
-
-      console.log("Connect id here: ", socket.id);
 
       const validateToken = await validateSessionToken(token);
       if (!validateToken.session || !validateToken.user) {
         throw new ApiError(401, "Invalid access token");
       }
 
-      socket.user = validateToken.user;
+      const { user } = validateToken;
+      console.log("token: ", token);
 
-      // We are creating a room with user id so that if user is joined but does not have any active chat going on.
-      // still we want to emit some socket events to the user.
-      // so that the client can catch the event and show the notifications.
-      // socket.join(user._id.toString());
-      // socket.emit(ChatEventEnum.CONNECTED_EVENT); // emit the connected event so that client is aware
-      // console.log("User connected 🗼. userId: ", user._id.toString());
+      socket.user = user;
 
-      // Common events that needs to be mounted on the initialization
-      // mountJoinChatEvent(socket);
-      // mountParticipantTypingEvent(socket);
-      // mountParticipantStoppedTypingEvent(socket);
+      socket.join(user.id.toString());
+      socket.emit(ChatEventEnum.CONNECTED_EVENT, `${user.id.toString()}`);
+      console.log("User connected 🗼. userId: ", user.id.toString());
 
-      // socket.on(ChatEventEnum.DISCONNECT_EVENT, () => {
-      //   console.log("user has disconnected 🚫. userId: " + socket.user?._id);
-      //   if (socket.user?._id) {
-      //     socket.leave(socket.user._id);
-      //   }
+      // TODO: emit message
+      // socket.on("message", (data) => {
+      //   console.log(data);
+
+      //   // TODO: still needed since user may not be cconnected at all
+      //   // let user
+      //   // if(data.userSocket === socket.user?.id){
+      //   //   console.log("Yeah!!!");
+      //   // }
+      //   socket.to(data.chatId).emit("message", {
+      //     message: data.message,
+      //     user: socket.user?.username,
+      //   });
+      //   // socket.emit("message", {
+      //   //   message: data.message,
+      //   //   user: socket.user?.username,
+      //   // });
       // });
+
+      mountJoinChatEvent(socket);
+      mountParticipantTypingEvent(socket);
+      mountParticipantStoppedTypingEvent(socket);
+
+      socket.on(ChatEventEnum.DISCONNECT_EVENT, () => {
+        console.log("user has disconnected 🚫. userId: " + socket.user?.id);
+        if (socket.user?.id) {
+          socket.leave(socket.user.id);
+        }
+      });
     } catch (error) {
       if (error instanceof MyCustomError) {
         console.error(error);
