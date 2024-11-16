@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ChatListItemInterface, UserInterface } from "@/lib/types/chat";
-
+// useChatStore.subscribe((state) => console.log("State changed", state));
 interface authStore {
   user: UserInterface | null;
   token: string | null;
@@ -47,6 +47,9 @@ interface chatStore {
   ) => void;
   creatingChat: boolean;
   setCreatingChat: () => void;
+
+  createChat: boolean;
+  setCreateChat: () => void;
 }
 
 // WARN: conver setChats to switch case type - maybe?
@@ -54,6 +57,8 @@ export const useChatStore = create<chatStore>((set) => ({
   creatingChat: false,
   setCreatingChat: () =>
     set((state) => ({ creatingChat: !state.creatingChat })),
+  createChat: false,
+  setCreateChat: () => set((state) => ({ createChat: !state.createChat })),
   allChats: [],
   setChats: (updateType, chat, chats, chatId) =>
     set((state) => {

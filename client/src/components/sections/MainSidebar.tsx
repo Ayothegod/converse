@@ -16,14 +16,14 @@ import {
   Group,
   Home,
   LogOut,
-  Phone,
-  Save,
   Settings,
-  Trash,
-  Upload,
   User,
+  // Phone,
+  // Save,
+  // Trash,
+  // Upload,
 } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // /group/chat/iwe832
 // /chat/ysdu838
@@ -31,34 +31,34 @@ import { useLocation } from "react-router-dom";
 const items = [
   {
     title: "Chats",
-    url: "/home",
+    url: "/chat",
     icon: Home,
   },
   {
     title: "Groups",
-    url: "/group",
+    url: "/chat/group",
     icon: Group,
   },
-  {
-    title: "Status",
-    url: "/status",
-    icon: Upload,
-  },
-  {
-    title: "Calls",
-    url: "#",
-    icon: Phone,
-  },
-  {
-    title: "Archived Chat",
-    url: "#",
-    icon: Trash,
-  },
-  {
-    title: "Saved Messages",
-    url: "#",
-    icon: Save,
-  },
+  // {
+  //   title: "Status",
+  //   url: "/status",
+  //   icon: Upload,
+  // },
+  // {
+  //   title: "Calls",
+  //   url: "#",
+  //   icon: Phone,
+  // },
+  // {
+  //   title: "Archived Chat",
+  //   url: "#",
+  //   icon: Trash,
+  // },
+  // {
+  //   title: "Saved Messages",
+  //   url: "#",
+  //   icon: Save,
+  // },
 ];
 
 const footerItems = [
@@ -89,7 +89,7 @@ export default function MainSidebar() {
   } = useSidebar();
 
   return (
-    <div className="hidden lg:flex">
+    <div className="hidden md:flex">
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <SidebarMenu>
@@ -114,13 +114,13 @@ export default function MainSidebar() {
                     <SidebarMenuButton
                       variant={path === item.url ? "outline" : "default"} asChild
                     >
-                      <a
-                        href={item.url}
+                      <Link
+                        to={item.url}
                         className={`${path === item.url && "text-foreground"}`}
                       >
                         <item.icon className="h-4 w-4" />
                         <span className="text-base">{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

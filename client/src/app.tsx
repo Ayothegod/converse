@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout.tsx";
-import Home from "./routes/home.tsx";
+import Chats from "./routes/chats.tsx";
+import Groups from "./routes/groups.tsx";
 import Login from "./routes/login.tsx";
 import Register from "./routes/register.tsx";
 import Root, { RootError, Loader as rootLoader } from "./routes/root.tsx";
@@ -28,8 +29,12 @@ const router = createBrowserRouter([
     // errorElement: <MainLayoutError />,
     children: [
       {
-        path: "/home",
-        element: <Home />,
+        path: "/chat",
+        element: <Chats />,
+      },
+      {
+        path: "/chat/group",
+        element: <Groups />,
       },
     ],
   },
