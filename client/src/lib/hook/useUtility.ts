@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { AxiosResponse } from "axios";
+import { APIStatusResponseInterface, ChatListItemInterface, UserInterface } from "../types/chat";
+
 export const isBrowser = typeof window !== "undefined";
 
 export class LocalStorage {
@@ -31,3 +34,61 @@ export class LocalStorage {
     localStorage.clear();
   }
 }
+
+export const fetcher = async (
+  api: () => Promise<AxiosResponse<APIStatusResponseInterface, any>>
+): Promise<{
+  data: APIStatusResponseInterface | null;
+  error: string | null;
+  isLoading: boolean;
+}> => {
+  let data: APIStatusResponseInterface | null = null;
+  let error: string | null = null;
+  let isLoading: boolean = true;
+
+  try {
+    const response = await api();
+    data = response.data;
+
+    // console.log(data);
+  } catch (err: any) {
+    // console.log(err?.response?.data);
+
+    error = (err?.response?.data.message as string) || "An error occurred";
+  } finally {
+    isLoading = false;
+  }
+
+  return { data, error, isLoading };
+};
+
+export const getChatObjectMetadata = (
+  chat: ChatListItemInterface, 
+  loggedInUser: UserInterface 
+) => {
+  const lastMessage = chat.lastMessage?.content
+    ? chat.lastMessage?.content
+    :  "No messages yet"
+
+  if (chat.isGroupGame) {
+    return {
+      avatar: "https://via.placeholder.com/100x100.png",
+      title: chat.name, 
+      description: `${chat.players.length} members in the chat`,
+      lastMessage: chat.lastMessage
+        ? chat.lastMessage?.sender?.username + ": " + lastMessage
+        : lastMessage,
+    };
+  } else {
+    const player = chat.players.find(
+      (p) => p.id !== loggedInUser?.id
+    );
+
+    return {
+      avatar: player?.avatarId, 
+      title: player?.username, 
+      description: player?.email,
+      lastMessage,
+    };
+  }
+};

@@ -6,16 +6,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosInstance } from "@/lib/fetch";
+import { axiosInstance, NewAxiosResponse } from "@/lib/fetch";
 import { loginUserSchema } from "@/lib/schema";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Logo from "@/components/build/Logo";
 import { useState } from "react";
+import { useAuthStore } from "@/lib/store/stateStore";
 
 type LoginSchemaType = z.infer<typeof loginUserSchema>;
 
 export default function Login() {
+  const { setToken, setUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -29,18 +31,22 @@ export default function Login() {
     setLoading(!loading);
 
     try {
-      const response = await axiosInstance.post(`/auth/login`, {
-        username: data.username,
-        password: data.password,
-      });
-      // console.log(response.data);
+      const response: NewAxiosResponse = await axiosInstance.post(
+        `/auth/login`,
+        {
+          username: data.username,
+          password: data.password,
+        }
+      );
+      setToken("jh7ws89shs7823jwe");
+      setUser(response.data.data);
 
       toast({
         title: `${response.data ? response.data.message : "Success"}`,
         description: `welcome back, ${data.username}`,
       });
 
-      return navigate("/chat");
+      return navigate("/play");
     } catch (error: any) {
       // console.log(error.response.data);
 
