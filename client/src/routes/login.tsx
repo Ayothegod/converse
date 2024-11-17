@@ -46,7 +46,7 @@ export default function Login() {
         description: `welcome back, ${data.username}`,
       });
 
-      return navigate("/play");
+      return navigate("/chat");
     } catch (error: any) {
       // console.log(error.response.data);
 

@@ -114,11 +114,11 @@ export const ChatItem: React.FC<{
         <div className="flex justify-center items-center flex-shrink-0">
           {chat.isGroupGame ? (
             <div className="w-12 relative h-12 flex-shrink-0 flex justify-start items-center flex-nowrap">
-              {chat.players.slice(0, 3).map((player, i) => {
+              {chat.participants.slice(0, 3).map((participant, i) => {
                 // console.log(player);
 
                 return (
-                  <div key={player.id} className="flex items-center gap-2">
+                  <div key={participant.id} className="flex items-center gap-2">
                     <Skeleton 
                     className={clsx(
                       "w-8 h-8 border-[1px] bg-primary  border-white rounded-full absolute outline outline-4 outline-dark group-hover:outline-secondary",

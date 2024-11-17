@@ -23,7 +23,7 @@ export interface ChatListItemInterface {
 
   lastMessage?: ChatMessageInterface
   messages: ChatMessageInterface[]
-  players: UserInterface[];
+  participants: UserInterface[];
   updatedAt: string;
 }
 

@@ -44,7 +44,7 @@ export default function Register() {
         description: `welcome to converse, ${data.username}`,
       });
 
-      return navigate("/login");
+      return navigate("/chat");
     } catch (error: any) {
       // console.log(error.response.data);
 

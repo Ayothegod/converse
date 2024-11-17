@@ -50,6 +50,8 @@ interface chatStore {
 
   createChat: boolean;
   setCreateChat: () => void;
+  isGroupChat: boolean;
+  setIsGroupChat: (type?: boolean) => void;
 }
 
 // WARN: conver setChats to switch case type - maybe?
@@ -59,6 +61,13 @@ export const useChatStore = create<chatStore>((set) => ({
     set((state) => ({ creatingChat: !state.creatingChat })),
   createChat: false,
   setCreateChat: () => set((state) => ({ createChat: !state.createChat })),
+  isGroupChat: false,
+  setIsGroupChat: (type) =>
+    set((state) => {
+      // console.log(type);
+
+      return { isGroupChat: type ? type : !state.isGroupChat };
+    }),
   allChats: [],
   setChats: (updateType, chat, chats, chatId) =>
     set((state) => {

@@ -74,20 +74,20 @@ export const getChatObjectMetadata = (
     return {
       avatar: "https://via.placeholder.com/100x100.png",
       title: chat.name, 
-      description: `${chat.players.length} members in the chat`,
+      description: `${chat.participants.length} members in the chat`,
       lastMessage: chat.lastMessage
         ? chat.lastMessage?.sender?.username + ": " + lastMessage
         : lastMessage,
     };
   } else {
-    const player = chat.players.find(
+    const participant = chat.participants.find(
       (p) => p.id !== loggedInUser?.id
     );
 
     return {
-      avatar: player?.avatarId, 
-      title: player?.username, 
-      description: player?.email,
+      avatar: participant?.avatarId, 
+      title: participant?.username, 
+      description: participant?.email,
       lastMessage,
     };
   }
