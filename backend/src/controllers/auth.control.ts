@@ -13,9 +13,6 @@ import { AuthErrorEnum } from "../utils/constants.js";
 const registerController = asyncHandler(async (req: Request, res: Response) => {
   const { email: userEmail, username: userName, password, fullname } = req.body;
 
-  // Validate body data
-  // console.log(email, username, password, fullname);
-
   const existingUser = await prisma.user.findFirst({
     where: {
       OR: [{ email: userEmail }, { username: userName }],
@@ -42,6 +39,7 @@ const registerController = asyncHandler(async (req: Request, res: Response) => {
       email: userEmail,
       username: userName,
       password: hashedPassword,
+      fullname: fullname
     },
   });
 
