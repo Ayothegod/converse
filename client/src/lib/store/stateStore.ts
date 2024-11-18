@@ -4,9 +4,9 @@ import { ChatListItemInterface, UserInterface } from "@/lib/types/chat";
 // useChatStore.subscribe((state) => console.log("State changed", state));
 interface authStore {
   user: UserInterface | null;
-  token: string | null;
+  // token: string | null;
   setUser: (user?: UserInterface) => void;
-  setToken: (token?: string) => void;
+  // setToken: (token?: string) => void;
   logout: () => void;
 }
 
@@ -14,25 +14,24 @@ export const useAuthStore = create<authStore>()(
   persist(
     (set) => ({
       user: null,
-      token: null,
+      // token: null,
+      // setToken: (token) => set(() => ({ token: token })),
       setUser: (user) =>
         set(() => {
           return { user: user };
         }),
-      setToken: (token) => set(() => ({ token: token })),
       logout: () =>
         set((state) => {
           console.log("logout cicked!");
 
-          if (state.token || state.user) {
-            return { token: null, user: null };
+          if (state.user) {
+            return { user: null };
           }
-          return { token: null, user: null };
-          // return state;
+          return { user: null };
         }),
     }),
     {
-      name: "chat-data",
+      name: "auth-data",
     }
   )
 );

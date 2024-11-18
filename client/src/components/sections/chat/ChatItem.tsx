@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import moment from "moment";
 import React, { useState } from "react";
@@ -38,6 +39,9 @@ export const ChatItem: React.FC<{
       });
     }
     onChatDelete(chat.id);
+    toast({
+      description: `chat deleted successfully`,
+    });
   };
 
   if (!chat) return;
@@ -56,17 +60,16 @@ export const ChatItem: React.FC<{
         onClick={() => onClick(chat)}
         onMouseLeave={() => setOpenOptions(false)}
         className={clsx(
-          "group p-4 my-2 flex justify-between gap-3 items-start cursor-pointer rounded-3xl hover:bg-secondary",
-          isActive ? "border-[1px] border-zinc-500 bg-secondary" : "",
+          "group p-4 my-2 flex justify-between gap-3 items-start cursor-pointer rounded-md border-2 border-background-top hover:border-background",
+          isActive ? "bg-background" : "",
           unreadCount > 0
             ? "border-[1px] border-success bg-success/20 font-bold"
             : ""
         )}
       >
         {/* NOTE: open group chat modal */}
-        <button
+        {/* <button
           onClick={(e) => {
-            e.stopPropagation();
             setOpenOptions(!openOptions);
           }}
           className="self-center p-1 relative"
@@ -108,7 +111,7 @@ export const ChatItem: React.FC<{
               </p>
             )}
           </div>
-        </button>
+        </button> */}
 
         {/* NOTE: set chat avatar  */}
         <div className="flex justify-center items-center flex-shrink-0">
@@ -119,18 +122,18 @@ export const ChatItem: React.FC<{
 
                 return (
                   <div key={participant.id} className="flex items-center gap-2">
-                    <Skeleton 
-                    className={clsx(
-                      "w-8 h-8 border-[1px] bg-primary  border-white rounded-full absolute outline outline-4 outline-dark group-hover:outline-secondary",
-                      i === 0
-                        ? "left-0 z-[3]"
-                        : i === 1
-                        ? "left-2.5 z-[2]"
-                        : i === 2
-                        ? "left-[18px] z-[1]"
-                        : ""
-                    )}
-                     />
+                    <Skeleton
+                      className={clsx(
+                        "w-8 h-8 border-[1px] bg-primary  border-white rounded-full absolute outline outline-4 outline-dark group-hover:outline-secondary",
+                        i === 0
+                          ? "left-0 z-[3]"
+                          : i === 1
+                            ? "left-2.5 z-[2]"
+                            : i === 2
+                              ? "left-[18px] z-[1]"
+                              : ""
+                      )}
+                    />
                   </div>
                 );
               })}
@@ -161,7 +164,7 @@ export const ChatItem: React.FC<{
           </small>
 
           {unreadCount <= 0 ? (
-            "null"
+            <span>0</span>
           ) : (
             <span className="bg-success h-2 w-2 aspect-square flex-shrink-0 p-2 text-white text-xs rounded-full inline-flex justify-center items-center">
               {unreadCount > 9 ? "9+" : unreadCount}

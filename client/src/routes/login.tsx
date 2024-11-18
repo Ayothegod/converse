@@ -17,7 +17,7 @@ import { useAuthStore } from "@/lib/store/stateStore";
 type LoginSchemaType = z.infer<typeof loginUserSchema>;
 
 export default function Login() {
-  const { setToken, setUser } = useAuthStore();
+  const { setUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -29,6 +29,8 @@ export default function Login() {
 
   const onSubmit = async (data: LoginSchemaType) => {
     setLoading(!loading);
+    console.log(data);
+    
 
     try {
       const response: NewAxiosResponse = await axiosInstance.post(
@@ -38,7 +40,6 @@ export default function Login() {
           password: data.password,
         }
       );
-      setToken("jh7ws89shs7823jwe");
       setUser(response.data.data);
 
       toast({

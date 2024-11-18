@@ -5,6 +5,7 @@ import Groups from "./routes/groups.tsx";
 import Login from "./routes/login.tsx";
 import Register from "./routes/register.tsx";
 import Root, { RootError, Loader as rootLoader } from "./routes/root.tsx";
+import Chat from "./routes/chat.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,11 +27,19 @@ const router = createBrowserRouter([
   {
     element: <MainLayout />,
     errorElement: <RootError />,
-    // errorElement: <MainLayoutError />,
     children: [
       {
         path: "/chat",
         element: <Chats />,
+        children: [
+          {
+            path: "c/:id",
+            element: <Chat />,
+            loader: async ({ params }) => {
+              return params.id;
+            },
+          },
+        ],
       },
       {
         path: "/chat/group",

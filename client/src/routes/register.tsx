@@ -17,7 +17,7 @@ import { useAuthStore } from "@/lib/store/stateStore";
 type RegisterSchemaType = z.infer<typeof registerSchema>;
 
 export default function Register() {
-  const { setUser, setToken } = useAuthStore();
+  const { setUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -29,15 +29,17 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterSchemaType) => {
     setLoading(!loading);
+    console.log(data);
 
     try {
       const response = await axiosInstance.post(`/auth/register`, {
         email: data.email,
         username: data.username,
         password: data.password,
+        fullname: data.fullname
       });
-      setToken("jh7ws89shs7823jwe");
       setUser(response.data.data);
+      console.log(response);
 
       toast({
         title: `${response.data ? response.data.message : "Success"}`,
@@ -87,6 +89,19 @@ export default function Register() {
               onSubmit={handleSubmit(onSubmit)}
               className="mt-8 flex flex-col gap-y-4"
             >
+              <div>
+                <Label className="text-xs">FullName</Label>
+                <Input
+                  type="text"
+                  {...register("fullname")}
+                  placeholder="Enter your fullname."
+                />
+                {errors.fullname && (
+                  <Label className="text-xs text-red-500">
+                    {errors.fullname?.message}
+                  </Label>
+                )}
+              </div>
               <div>
                 <Label className="text-xs">Email Address</Label>
                 <Input

@@ -8,13 +8,15 @@ import { useSocket } from "@/lib/context/useSocketContext";
 import { ChatEvent } from "@/lib/db";
 import { getChatMessages, getUserChats } from "@/lib/fetch";
 import { fetcher, LocalStorage } from "@/lib/hook/useUtility";
-import { useChatStore } from "@/lib/store/stateStore";
+import { useAuthStore, useChatStore } from "@/lib/store/stateStore";
 import { ChatListItemInterface, ChatMessageInterface } from "@/lib/types/chat";
 import { MessagesSquare, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 export default function Chats() {
-  const { createChat, setCreateChat, allChats,setChats } = useChatStore();
+  const { createChat, setCreateChat, allChats, setChats } = useChatStore();
+  const { user } = useAuthStore();
 
   const { socket } = useSocket();
   const { toast } = useToast();
@@ -259,8 +261,6 @@ export default function Chats() {
 
   // DONE:
   const onNewChat = (chat: ChatListItemInterface) => {
-    // console.log("New chat", chat);
-
     setChats("addChat", chat);
   };
 
@@ -333,14 +333,20 @@ export default function Chats() {
   const startCreateChat = () => {
     setCreateChat();
   };
-  console.log(allChats);
+  // console.log(allChats);
+
+  const location = useLocation();
+  const isMainChatPage = location.pathname === "/chat";
+
   return (
-    <div className="min-h-screen flex full">
+    <div className="min-h-screen flex full bg-background-top">
       {/* PENDING: */}
-      <div className="w-full sm:w-[18em] p-3 md:w-[20em] lg:w-[24em] border  min-h-screen flex-shrink-0 flex flex-col gap-4">
-        <div>
+      <div className="w-full sm:w-[18em] p-3 md:w-[20em] lg:w-[24em]  min-h-screen flex-shrink-0 flex flex-col gap-4">
+        <div className="flex items-center gap-4">
           <h1 className="text-2xl text-white font-semibold">Chats</h1>
+          <p>{user?.username}</p>
         </div>
+        <Link to={`/chat/c/dfdklf934`}>New chat</Link>
 
         <div className="relative">
           <Search className="h-4 w-4 absolute top-2" />
@@ -372,47 +378,53 @@ export default function Chats() {
                   <MessagesSquare className="h-4 w-4" /> All Chats
                 </CustomLabel>
                 {[...allChats].map((chat) => (
-                  <ChatItem
-                    chat={chat}
-                    isActive={chat.id === currentChat.current?.id}
-                    unreadCount={
-                      unreadMessages.filter((n) => n.chat === chat.id).length
-                    }
-                    onClick={(chat) => {
-                      if (
-                        currentChat.current?.id &&
-                        currentChat.current?.id === chat.id
-                      )
-                        return;
-                      LocalStorage.set("currentChat", chat);
-                      currentChat.current = chat;
-                      setMessage("");
-                      // getMessages();
-                    }}
-                    key={chat.id}
-                    onChatDelete={(chatId) => {
-                      setChats("filterChat", undefined, undefined, chatId);
-                      if (currentChat.current?.id === chatId) {
-                        currentChat.current = null;
-                        LocalStorage.remove("currentChat");
+                  <Link to={`/chat/c/${chat.id}`} key={chat.id}>
+                    <ChatItem
+                      chat={chat}
+                      isActive={chat.id === currentChat.current?.id}
+                      unreadCount={
+                        unreadMessages.filter((n) => n.chat === chat.id).length
                       }
-                    }}
-                  />
+                      onClick={(chat) => {
+                        if (
+                          currentChat.current?.id &&
+                          currentChat.current?.id === chat.id
+                        )
+                          return;
+                        LocalStorage.set("currentChat", chat);
+                        currentChat.current = chat;
+                        setMessage("");
+                        // getMessages();
+                      }}
+                      key={chat.id}
+                      onChatDelete={(chatId) => {
+                        setChats("filterChat", undefined, undefined, chatId);
+                        if (currentChat.current?.id === chatId) {
+                          currentChat.current = null;
+                          LocalStorage.remove("currentChat");
+                        }
+                      }}
+                    />
+                  </Link>
                 ))}
               </div>
             )}
           </div>
         </div>
       </div>
-      {/* <div className="bg-primary p-3 rounded-full text-white w-max shadow-sm cursor-pointer">
-                  <Plus className="h-5 w-5" />
-                </div> */}
 
       {/* PENDING: chats page here */}
       <div className="hidden sm:flex min-h-screen flex-shrink-0 flex-grow">
-        <div>
-          <Button>Hello</Button>
-        </div>
+        {isMainChatPage ? (
+          <div className="flex flex-col items-center justify-center w-full">
+            <p className="text-lg font-medium">No chat to display!</p>
+            <h2 className="text-foreground-top text-2xl">
+              Select a chat now to get started...
+            </h2>
+          </div>
+        ) : (
+          <Outlet />
+        )}
       </div>
     </div>
   );
